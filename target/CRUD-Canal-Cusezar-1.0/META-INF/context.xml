@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/CRUD-Canal-Cusezar-1.0">
+
+<Resource name="jdbc/BaseCanalDigital" auth="Container"
+   type="javax.sql.DataSource" maxActive="15"
+   maxIdle="3" maxWait="10000" username="jpablo"
+   password="Nad95037"
+   driverClassName="com.mysql.jdbc.Driver"
+   url="jdbc:mysql://localhost:3306/cusezar"/>
+
+</Context>
