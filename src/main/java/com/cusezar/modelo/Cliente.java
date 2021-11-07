@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.cusezar.component;
+package com.cusezar.modelo;
 
 /**
  *
  * @author Juan Pablo - Roverin Technologics
  */
-public class Cliente {
+public class Cliente implements java.io.Serializable {
 
     //
     //------- Constructores
@@ -39,15 +39,18 @@ public class Cliente {
     //------- Variables de estado de cliente
     // Contactado
     private String fechaUltimoContacto;
+    private boolean contactado = fechaUltimoContacto != null;
     private boolean contactoEfectivo;
 
     // Calificado
     private String proyectoCalificado;
+    private boolean calificado = proyectoCalificado != null;
 
-    // Agendado para visita
+    // Agendado para visita   
     private int diaVisita = -1;
     private int mesVisita = -1;
     private int agnoVisita = -1;
+    private boolean visitaAgendada = diaVisita >= 0 && mesVisita >= 0 && agnoVisita >= 0;
     private boolean visitaEfectiva;
 
     // Estado del prospecto
@@ -160,8 +163,8 @@ public class Cliente {
     }
 
     //------- Métodos de estado de cliente
-    public boolean isContacto() {
-        return fechaUltimoContacto != null;
+    public boolean isContactado() {
+        return contactado;
     }
 
     public String getFechaUltimoContacto() {
@@ -189,7 +192,7 @@ public class Cliente {
     }
 
     public boolean isCalificado() {
-        return proyectoCalificado != null;
+        return this.calificado;
     }
 
     public int getDiaVisita() {
@@ -217,7 +220,7 @@ public class Cliente {
     }
 
     public boolean isVisitaAgendada() {
-        return diaVisita >= 0 && mesVisita >= 0 && agnoVisita >= 0;
+        return this.visitaAgendada;
     }
 
     public boolean isVisitaEfectiva() {

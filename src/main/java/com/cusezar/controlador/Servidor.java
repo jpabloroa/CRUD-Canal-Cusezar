@@ -5,16 +5,15 @@
  */
 package com.cusezar.controlador;
 
-import com.cusezar.component.Cliente;
+import com.cusezar.modelo.Cliente;
 import com.cusezar.modelo.Modelo;
-import com.cusezar.utils.CSVReader;
+import com.cusezar.tools.CSVReader;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -28,28 +27,29 @@ import javax.sql.DataSource;
  *
  * @author Juan Pablo - Roverin Technologics
  */
-@WebServlet(name = "Servidor", urlPatterns = {"/datos"})
+@WebServlet(name = "Servidor", urlPatterns = {"/clientes/*"})
 public class Servidor extends HttpServlet {
 
     /**
      * Mesnaje que arroja la clase
      */
     public class RESPUESTA {
-        
+
         //
         public static final String HTTP_200 = " ¡ OK ! ";
         public static final String HTTP_201 = " ¡ El recurso ha sido creado exitosamente ! ";
         public static final String HTTP_406 = " ¡ Error de solicitud HTTP, verifique la sintaxis de la solicitud ! ";
     }
-    
+
     //-------- Controlador
     public class CONTROLADOR {
 
         //
-        public static final String CONSULTA = "consulta";
+        public static final String INICIO = "inicio";
+        public static final String CONSULTA = "ver";
         public static final String INSERTAR = "insertar";
     }
-    
+
     //-------- Contenido
     public class CONTENT {
 
@@ -59,60 +59,54 @@ public class Servidor extends HttpServlet {
         public static final String XML = "xml";
         public static final String CSV = "csv";
     }
-        
-   /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String proceso = (request.getParameter("proceso") == null) ? "-" : request.getParameter("proceso").toLowerCase();
 
-        modelo = new Modelo(conexion);
-        reader = new CSVReader();
-        switch (proceso) {
+    //-------- Mensaje
+    class Mensaje {
+
+        //
+        public Mensaje(String respuesta, int estado, Object datos) {
+            this.respuesta = respuesta;
+            this.estado = estado;
+            this.datos = datos;
         }
+
+        //
+        private String respuesta;
+        private int estado;
+        private Object datos;
     }
-    
+
     /**
      * Métodos
      */
-    
     /**
-     * 
+     *
      * @param response
      * @param mensaje
-     * @throws IOException 
+     * @throws IOException
      */
-    private void jsonResponse(HttpServletResponse response, String mensaje) throws IOException {
+    private void jsonResponse(HttpServletResponse response, List<Cliente> listaClientes) throws IOException {
         printer = response.getWriter();
         response.setContentType("application/json");
-        Map<String, String> json = new LinkedHashMap();
-        json.put("respuesta", mensaje);
-        printer.write(new Gson().toJson(json));
+        printer.write(new Gson().toJson(new Mensaje(" ¡ Proceso realizado exitosamente ! ", response.getStatus(), listaClientes)));
         printer.flush();
     }
 
     /**
-     * 
+     *
      * @param ex
      * @param request
      * @param response
      * @throws ServletException
-     * @throws IOException 
+     * @throws IOException
      */
-    private void send406(Exception ex, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("error", ex.getMessage());
-        response.setStatus(406);
-        dispatcher = request.getRequestDispatcher("/META-DATA/message-jsp-pages/406.jsp");
-        dispatcher.forward(request, response);
+    private void sendError(Exception ex, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        printer = response.getWriter();
+        response.setContentType("application/json");
+        printer.write(new Gson().toJson(new Mensaje(new StringBuilder().append(" ¡ Error al ejecutar la solicitud ! ").append(request.getMethod()).append(" en el recurso ").append(request.getPathInfo()).append(" ! - Detalles : ").append(ex.getMessage()).toString(), response.getStatus(), "")));
+        printer.flush();
     }
-    
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -124,7 +118,56 @@ public class Servidor extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //
+        String path = (request.getPathInfo() == null || request.getPathInfo().length() < 5) ? "ver/" : request.getPathInfo().substring(1);
+        String[] paths = path.split("/");
+        int arraySize = paths.length;
+
+        //
+        switch (paths[0]) {
+            case CONTROLADOR.INICIO: {
+                try {
+                    //
+                    modelo = new Modelo(conexion);
+                    reader = new CSVReader();
+
+                    //
+                    String columna = (arraySize > 1) ? paths[1] : "!¡";
+                    String valor = (arraySize > 2 || !"!¡".equals(columna)) ? paths[2] : columna;
+                    String formato = (request.getParameter("formato") == null) ? CONTENT.JSON : request.getParameter("formato").toLowerCase();
+                    String columnas = (request.getParameter("columnas") == null) ? "" : request.getParameter("columnas");
+                    int maxFilas = (request.getParameter("maxFilas") == null) ? 100 : Integer.parseInt(request.getParameter("maxFilas"));
+                    dispatcher = request.getRequestDispatcher("/inicio.jsp");
+                    request.setAttribute("LISTA-CLIENTES", modelo.getClientes(columnas, columna, valor, maxFilas));
+                    dispatcher.forward(request, response);
+                } catch (SQLException ex) {
+                    sendError(ex, request, response);
+                }
+            }
+            break;
+            case CONTROLADOR.CONSULTA: {
+                try {
+                    //
+                    modelo = new Modelo(conexion);
+                    reader = new CSVReader();
+
+                    //
+                    String columna = (arraySize > 1) ? paths[1] : "!¡";
+                    String valor = (arraySize > 2 || !"!¡".equals(columna)) ? paths[2] : columna;
+                    String formato = (request.getParameter("formato") == null) ? CONTENT.JSON : request.getParameter("formato").toLowerCase();
+                    String columnas = (request.getParameter("columnas") == null) ? "" : request.getParameter("columnas");
+                    int maxFilas = (request.getParameter("maxFilas") == null) ? 100 : Integer.parseInt(request.getParameter("maxFilas"));
+                    jsonResponse(response, modelo.getClientes(columnas, columna, valor, maxFilas));
+                } catch (SQLException ex) {
+                    sendError(ex, request, response);
+                }
+            }
+            break;
+
+            default:
+                break;
+        }
+
     }
 
     /**
@@ -138,7 +181,31 @@ public class Servidor extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+    }
+
+    /**
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doPut(req, resp); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.doDelete(req, resp); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**

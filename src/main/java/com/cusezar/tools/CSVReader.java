@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.cusezar.utils;
+package com.cusezar.tools;
 
-import com.cusezar.component.Cliente;
-import com.cusezar.component.Constantes;
+import com.cusezar.modelo.Cliente;
+import com.cusezar.test.Constantes;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

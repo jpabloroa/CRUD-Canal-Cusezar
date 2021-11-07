@@ -3,11 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.cusezar.tools;
+package com.cusezar.vista;
 
-import com.cusezar.test.Constantes;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,11 +18,11 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Juan Pablo - Roverin Technologics
  */
-@WebServlet(name = "Enrutador", urlPatterns = {"/r/*"})
-public class Enrutador extends HttpServlet implements Constantes {
+@WebServlet(name = "Vista", urlPatterns = {"/inicio"})
+public class Vista extends HttpServlet {
 
     private RequestDispatcher rd;
-
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -35,47 +34,11 @@ public class Enrutador extends HttpServlet implements Constantes {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        //
-        ArrayList<String> urlParams = getURLParams(request.getPathInfo().substring(1));
-
-        //
-        String ruta = urlParams.get(0).toLowerCase();
-
-        //
-        switch (ruta) {
-            case ENRUTADOR.INICIO:
-                rd = request.getRequestDispatcher("/index.jsp");
-                rd.forward(request, response);
-                break;
-            case ENRUTADOR.INSERTAR:
-                rd = request.getRequestDispatcher("/META-DATA/message-jsp-pages/insertar-datos.jsp");
-                rd.forward(request, response);
-                break;
-        }
+        
+        
+        rd = request.getRequestDispatcher("/inicio.jsp");
+//        request.setAttribute("LISTA-CLIENTES", );
     }
-
-    // <editor-fold defaultstate="collapsed" desc="Funciones">
-    /**
-     *
-     */
-    private ArrayList<String> getURLParams(String URLPath) {
-        String path = URLPath;
-        String auxiliar = "";
-        ArrayList<String> respuesta = new ArrayList<>();
-        int length = path.length();
-        for (int i = 0; i < length; i++) {
-            if ("/".equals(path.substring(i, i + 1))) {
-                respuesta.add(auxiliar);
-                auxiliar = "";
-            } else {
-                auxiliar += path.substring(i, i + 1);
-            }
-        }
-        respuesta.add(auxiliar);
-        return respuesta;
-    }
-    // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

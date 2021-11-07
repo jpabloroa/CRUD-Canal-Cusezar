@@ -1,7 +1,8 @@
-D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\component\Cliente.java
-D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\utils\DataBaseConnector.java
-D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\tools\Controlador.java
-D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\component\Constantes.java
+D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\modelo\Cliente.java
+D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\vista\Vista.java
+D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\controlador\Servidor.java
+D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\modelo\Modelo.java
 D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\tools\Enrutador.java
-D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\utils\CSVReader.java
+D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\tools\CSVReader.java
+D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\test\Constantes.java
 D:\OneDrive\Escritorio\CLASE JAVA\JAVA\Java Intermedio\Clases\CRUD-Canal-Cusezar\src\main\java\com\cusezar\test\Testing.java
