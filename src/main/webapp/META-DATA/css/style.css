@@ -1,0 +1,72 @@
+
+
+
+
+
+
+/*
+-
+-
+-
+-
+-
+*/
+
+.tools {
+    height: auto;
+    width: 100%;
+}
+
+.tools ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-size: 14px;
+    min-block-size: 15px;
+    width: 100%;
+    background-color: #dddddd;
+    height: 7vh;
+}
+
+.tools li {
+    margin: 1vh;
+    float: left;
+    text-align: center;
+    min-height: 16vh;
+    min-width: 10%;
+}
+
+.tools a, form {
+    padding: 15px;
+    display: block;
+    height: inherit;
+    border: 1px solid grey;
+}
+
+.tools a {
+    text-decoration: none;
+    color: black;
+    height: 100%;
+}
+
+.tools a:hover {
+    background-color: grey;
+    color: white;
+}
+
+.tools input, select {
+    font-family: inherit;
+    background-color: #dddddd;
+    font-size: inherit;
+}
+
+.tools input:hover {
+    background-color: grey;
+    color: white;
+}
+
+.tools select:hover {
+    background-color: grey;
+    color: white;
+}

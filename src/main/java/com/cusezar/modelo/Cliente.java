@@ -1,11 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * NO MODIFIQUE ESTE CÓDIGO
+ *
+ * Licencia registrada Roverin Technologics - 2021
  */
 package com.cusezar.modelo;
 
 /**
+ *
+ * Clase que defina el objeto <code>Cliente</code>
  *
  * @author Juan Pablo - Roverin Technologics
  */
@@ -38,8 +40,10 @@ public class Cliente implements java.io.Serializable {
     //
     //------- Variables de estado de cliente
     // Contactado
-    private String fechaUltimoContacto;
-    private boolean contactado = fechaUltimoContacto != null;
+    private int diaUltimoContacto = -1;
+    private int mesUltimoContacto = -1;
+    private int agnoUltimoContacto = -1;
+    private boolean contactado = diaUltimoContacto >= 0 && mesUltimoContacto >= 0 && agnoUltimoContacto >= 0;
     private boolean contactoEfectivo;
 
     // Calificado
@@ -55,6 +59,7 @@ public class Cliente implements java.io.Serializable {
 
     // Estado del prospecto
     private String estado;
+    private String asignadoA;
 
     //
     //------- Métodos de gestion
@@ -167,12 +172,28 @@ public class Cliente implements java.io.Serializable {
         return contactado;
     }
 
-    public String getFechaUltimoContacto() {
-        return fechaUltimoContacto;
+    public int getDiaUltimoContacto() {
+        return diaUltimoContacto;
     }
 
-    public void setFechaUltimoContacto(String fechaUltimoContacto) {
-        this.fechaUltimoContacto = fechaUltimoContacto;
+    public void setDiaUltimoContacto(int diaUltimoContacto) {
+        this.diaUltimoContacto = diaUltimoContacto;
+    }
+
+    public int getMesUltimoContacto() {
+        return mesUltimoContacto;
+    }
+
+    public void setMesUltimoContacto(int mesUltimoContacto) {
+        this.mesUltimoContacto = mesUltimoContacto;
+    }
+
+    public int getAgnoUltimoContacto() {
+        return agnoUltimoContacto;
+    }
+
+    public void setAgnoUltimoContacto(int agnoUltimoContacto) {
+        this.agnoUltimoContacto = agnoUltimoContacto;
     }
 
     public boolean isContactoEfectivo() {
@@ -237,5 +258,13 @@ public class Cliente implements java.io.Serializable {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getAsignadoA() {
+        return asignadoA;
+    }
+
+    public void setAsignadoA(String asignadoA) {
+        this.asignadoA = asignadoA;
     }
 }

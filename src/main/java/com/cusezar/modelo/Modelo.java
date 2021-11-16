@@ -1,7 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * NO MODIFIQUE ESTE CÓDIGO
+ *
+ * Licencia registrada Roverin Technologics - 2021
  */
 package com.cusezar.modelo;
 
@@ -15,18 +15,17 @@ import javax.sql.DataSource;
 
 /**
  *
+ * Clase para el manejo de conexiones, realización de altas y bajas en una base
+ * de datos
+ *
  * @author Juan Pablo - Roverin Technologics
  */
 public class Modelo {
 
     /**
-     * Mensajes que arroja esta clase, Segun sea el caso
-     */
-    final String EXITO = "";
-    final String FALLO = "";
-
-    /**
+     * Clase columna
      *
+     * Define el los nombre de las columnas
      */
     class COLUMNA {
 
@@ -44,7 +43,9 @@ public class Modelo {
         public String proyectoDeInteres = "proyectoDeInteres";
         public String gestionDesdeSalaDeVentas = "gestionDesdeSalaDeVentas";
         public String habeasData = "habeasData";
-        public String fechaUltimoContacto = "fechaUltimoContacto";
+        public String diaUltimoContacto = "diaUltimoContacto";
+        public String mesUltimoContacto = "mesUltimoContacto";
+        public String agnoUltimoContacto = "agnoUltimoContacto";
         public String contactoEfectivo = "contactoEfectivo";
         public String proyectoCalificado = "proyectoCalificado";
         public String diaVisita = "diaVisita";
@@ -52,14 +53,7 @@ public class Modelo {
         public String agnoVisita = "agnoVisita";
         public String visitaEfectiva = "visitaEfectiva";
         public String estado = "estado";
-    }
-
-    /**
-     *
-     * @param connectionPool
-     */
-    public Modelo(DataSource connectionPool) {
-        this.connectionPool = connectionPool;
+        public String asignadoA = "asignadoA";
     }
 
     /**
@@ -75,8 +69,6 @@ public class Modelo {
      * @throws SQLException
      */
     public List<Cliente> getClientes(String columnas, String columna, String valor, int maxFilas) throws SQLException {
-        //
-        conection = connectionPool.getConnection();
 
         //
         StringBuilder sql = new StringBuilder();
@@ -103,7 +95,9 @@ public class Modelo {
             cliente.setProyectoDeInteres(resultSet.getString("proyectoDeInteres"));
             cliente.setGestionDesdeSalaDeVentas(resultSet.getBoolean("gestionDesdeSalaDeVentas"));
             cliente.setHabeasData(resultSet.getBoolean("habeasData"));
-            cliente.setFechaUltimoContacto(resultSet.getString("fechaUltimoContacto"));
+            cliente.setDiaUltimoContacto(resultSet.getInt(this.columna.diaUltimoContacto));
+            cliente.setMesUltimoContacto(resultSet.getInt(this.columna.mesUltimoContacto));
+            cliente.setAgnoUltimoContacto(resultSet.getInt(this.columna.agnoUltimoContacto));
             cliente.setContactoEfectivo(resultSet.getBoolean("contactoEfectivo"));
             cliente.setProyectoCalificado(resultSet.getString("proyectoCalificado"));
             cliente.setDiaVisita(resultSet.getInt("diaVisita"));
@@ -111,6 +105,7 @@ public class Modelo {
             cliente.setAgnoVisita(resultSet.getInt("agnoVisita"));
             cliente.setVisitaEfectiva(resultSet.getBoolean("visitaEfectiva"));
             cliente.setEstado(resultSet.getString("estado"));
+            cliente.setAsignadoA(resultSet.getString(this.columna.asignadoA));
 
             //
             lista.add(cliente);
@@ -127,22 +122,18 @@ public class Modelo {
      * @throws SQLException
      */
     public void addClientes(List<Cliente> Clientes) throws SQLException {
+
         //
-        conection = connectionPool.getConnection();
+        if (Clientes == null) {
+            throw new SQLException(" ¡ El objeto lista es nulo ! ");
+        }
 
         //
         StringBuilder sql = new StringBuilder();
-//        sql.append("INSERT INTO clientes (`diaDeCreacion`,`mesDeCreacion`,`agnoDeCreacion`,`codigoConteo`,`viable`,")
-//                .append("`nombre`,`correo`,`celular`,`medioPublicitario`,`zonaBusqueda`,`proyectoDeInteres`,")
-//                .append("`gestionDesdeSalaDeVentas`,`habeasData`,`fechaUltimoContacto`,`contactoEfectivo`,")
-//                .append("`proyectoCalificado`,diaVisita`,`mesVisita`,`agnoVisita`,`visitaEfectiva`,`estado`)")
-//                
-
         sql.append("INSERT INTO clientes (");
         sql.append(columna.diaDeCreacion).append(",");
         sql.append(columna.mesDeCreacion).append(",");
         sql.append(columna.agnoDeCreacion).append(",");
-        sql.append(columna.codigoConteo).append(",");
         sql.append(columna.viable).append(",");
         sql.append(columna.nombre).append(",");
         sql.append(columna.correo).append(",");
@@ -152,38 +143,46 @@ public class Modelo {
         sql.append(columna.proyectoDeInteres).append(",");
         sql.append(columna.gestionDesdeSalaDeVentas).append(",");
         sql.append(columna.habeasData).append(",");
-        sql.append(columna.fechaUltimoContacto).append(",");
+        sql.append(columna.diaUltimoContacto).append(",");
+        sql.append(columna.mesUltimoContacto).append(",");
+        sql.append(columna.agnoUltimoContacto).append(",");
         sql.append(columna.contactoEfectivo).append(",");
         sql.append(columna.proyectoCalificado).append(",");
         sql.append(columna.diaVisita).append(",");
         sql.append(columna.mesVisita).append(",");
         sql.append(columna.agnoVisita).append(",");
         sql.append(columna.visitaEfectiva).append(",");
-        sql.append(columna.estado).append(")");
-        sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)");
+        sql.append(columna.estado).append(",");
+        sql.append(columna.asignadoA).append(")");
+        sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?)");
         statement = conection.prepareStatement(sql.toString());
+
+        //
         for (Cliente cliente : Clientes) {
-            statement.setInt(1, cliente.getDiaDeCreacion());
-            statement.setInt(2, cliente.getMesDeCreacion());
-            statement.setInt(3, cliente.getAgnoDeCreacion());
-            statement.setString(4, null);
-            statement.setBoolean(5, cliente.isViable());
-            statement.setString(6, cliente.getNombre());
-            statement.setString(7, cliente.getCorreo());
-            statement.setString(8, cliente.getCelular());
-            statement.setString(9, cliente.getMedioPublicitario());
-            statement.setString(10, cliente.getZonaBusqueda());
-            statement.setString(11, cliente.getProyectoDeInteres());
-            statement.setBoolean(12, cliente.isGestionDesdeSalaDeVentas());
-            statement.setBoolean(13, cliente.isHabeasData());
-            statement.setString(14, cliente.getFechaUltimoContacto());
-            statement.setBoolean(15, cliente.isContactoEfectivo());
-            statement.setString(16, cliente.getProyectoCalificado());
-            statement.setInt(17, cliente.getDiaVisita());
-            statement.setInt(18, cliente.getMesVisita());
-            statement.setInt(19, cliente.getAgnoVisita());
-            statement.setBoolean(20, cliente.isVisitaEfectiva());
-            statement.setString(21, cliente.getEstado());
+            int i = 1;
+            statement.setInt(i++, cliente.getDiaDeCreacion());
+            statement.setInt(i++, cliente.getMesDeCreacion());
+            statement.setInt(i++, cliente.getAgnoDeCreacion());
+            statement.setBoolean(i++, cliente.isViable());
+            statement.setString(i++, cliente.getNombre());
+            statement.setString(i++, (cliente.getCorreo() == null) ? null : cliente.getCorreo().trim());
+            statement.setString(i++, (cliente.getCelular() == null) ? null : cliente.getCelular().trim());
+            statement.setString(i++, cliente.getMedioPublicitario());
+            statement.setString(i++, cliente.getZonaBusqueda());
+            statement.setString(i++, cliente.getProyectoDeInteres());
+            statement.setBoolean(i++, cliente.isGestionDesdeSalaDeVentas());
+            statement.setBoolean(i++, cliente.isHabeasData());
+            statement.setInt(i++, cliente.getDiaUltimoContacto());
+            statement.setInt(i++, cliente.getMesUltimoContacto());
+            statement.setInt(i++, cliente.getAgnoUltimoContacto());
+            statement.setBoolean(i++, cliente.isContactoEfectivo());
+            statement.setString(i++, cliente.getProyectoCalificado());
+            statement.setInt(i++, cliente.getDiaVisita());
+            statement.setInt(i++, cliente.getMesVisita());
+            statement.setInt(i++, cliente.getAgnoVisita());
+            statement.setBoolean(i++, cliente.isVisitaEfectiva());
+            statement.setString(i++, cliente.getEstado());
+            statement.setString(i++, cliente.getAsignadoA());
             statement.addBatch();
         }
 
@@ -192,30 +191,147 @@ public class Modelo {
     }
 
     /**
+     * Método updateClientes()
      *
+     * Actualizar un datos según el parámetro seleccionado
+     *
+     * @param column
+     * @param valor
+     * @param cliente
+     * @return
+     * @throws SQLException
      */
-    private String getQueryFromColumn(String columna, String valor) {
+    public int updateClientes(String column, String valor, Cliente cliente) throws SQLException {
+
+        //
+        StringBuilder sql = new StringBuilder();
+        sql.append("UPDATE clientes SET ");
+        sql.append(columna.viable).append(" = ? ,");
+        sql.append(columna.nombre).append(" = ? ,");
+        sql.append(columna.correo).append(" = ? ,");
+        sql.append(columna.celular).append(" = ? ,");
+        sql.append(columna.medioPublicitario).append(" = ? ,");
+        sql.append(columna.zonaBusqueda).append(" = ? ,");
+        sql.append(columna.proyectoDeInteres).append(" = ? ,");
+        sql.append(columna.gestionDesdeSalaDeVentas).append(" = ? ,");
+        sql.append(columna.habeasData).append(" = ? ,");
+        sql.append(columna.diaUltimoContacto).append(" = ? ,");
+        sql.append(columna.mesUltimoContacto).append(" = ? ,");
+        sql.append(columna.agnoUltimoContacto).append(" = ? ,");
+        sql.append(columna.contactoEfectivo).append(" = ? ,");
+        sql.append(columna.proyectoCalificado).append(" = ? ,");
+        sql.append(columna.diaVisita).append(" = ? ,");
+        sql.append(columna.mesVisita).append(" = ? ,");
+        sql.append(columna.agnoVisita).append(" = ? ,");
+        sql.append(columna.visitaEfectiva).append(" = ? ,");
+        sql.append(columna.estado).append(" = ? ,");
+        sql.append(columna.asignadoA).append(" = ? ");
+        sql.append(" WHERE ");
+        sql.append(("".equals(column)) ? this.columna.celular : column).append(" = ?");
+        statement = conection.prepareStatement(sql.toString());
+        int i = 1;
+        statement.setBoolean(i++, cliente.isViable());
+        statement.setString(i++, cliente.getNombre());
+        statement.setString(i++, (cliente.getCorreo() == null) ? null : cliente.getCorreo().trim());
+        statement.setString(i++, (cliente.getCelular() == null) ? null : cliente.getCelular().trim());
+        statement.setString(i++, cliente.getMedioPublicitario());
+        statement.setString(i++, cliente.getZonaBusqueda());
+        statement.setString(i++, cliente.getProyectoDeInteres());
+        statement.setBoolean(i++, cliente.isGestionDesdeSalaDeVentas());
+        statement.setBoolean(i++, cliente.isHabeasData());
+        statement.setInt(i++, cliente.getDiaUltimoContacto());
+        statement.setInt(i++, cliente.getMesUltimoContacto());
+        statement.setInt(i++, cliente.getAgnoUltimoContacto());
+        statement.setBoolean(i++, cliente.isContactoEfectivo());
+        statement.setString(i++, cliente.getProyectoCalificado());
+        statement.setInt(i++, cliente.getDiaVisita());
+        statement.setInt(i++, cliente.getMesVisita());
+        statement.setInt(i++, cliente.getAgnoVisita());
+        statement.setBoolean(i++, cliente.isVisitaEfectiva());
+        statement.setString(i++, cliente.getEstado());
+        statement.setString(i++, cliente.getAsignadoA());
+        statement.setObject(i++, valor);
+        //
+        return statement.executeUpdate();
+    }
+
+    /**
+     * Método deleteClientes()
+     *
+     * Elimina un datos según el parámetro seleccionado
+     *
+     * @param columna
+     * @param valor
+     * @return
+     * @throws SQLException
+     */
+    public int deleteClientes(String columna, String valor) throws SQLException {
+
+        //
+        if ("".equals(valor) || null == valor) {
+            throw new SQLException(" No hay datos ingresados ");
+        }
+        //
+        StringBuilder sql = new StringBuilder();
+        sql.append("DELETE FROM clientes WHERE ").append((("".equals(columna) || columna == null) ? this.columna.celular : columna)).append(" = ?");
+        statement = conection.prepareStatement(sql.toString());
+        statement.setString(1, valor);
+
+        //
+        return statement.executeUpdate();
+    }
+
+    /**
+     * Método getQueryFromColumn()
+     *
+     * Devuelve combinaciones de formatos condicionales para consulta
+     *
+     * @param columna
+     * @param valor
+     * @return
+     */
+    public String getQueryFromColumn(String columna, String valor) {
         StringBuilder respuesta = new StringBuilder();
-        switch (columna) {
+        String choice = "", extra = "";
+
+        if (columna.contains("-")) {
+            String[] auxArray = columna.split("-");
+            choice = auxArray[0];
+            extra = auxArray[1];
+        } else {
+            choice = columna;
+        }
+        String[] fecha;
+        int dia, mes, agno;
+        switch (choice) {
             case "fecha":
-                String[] fecha = valor.split("-");
-                int dia = (fecha.length < 1) ? java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_MONTH) : Integer.parseInt(fecha[0]);
-                int mes = (fecha.length < 2) ? java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) : Integer.parseInt(fecha[1]);
-                int agno = (fecha.length < 3) ? java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) : Integer.parseInt(fecha[2]);
+                fecha = valor.split("-");
+                dia = (fecha.length < 1) ? java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_MONTH) : Integer.parseInt(fecha[0]);
+                mes = (fecha.length < 2) ? java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) : Integer.parseInt(fecha[1]);
+                agno = (fecha.length < 3) ? java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) : Integer.parseInt(fecha[2]);
                 respuesta.append(" WHERE ").append(this.columna.diaDeCreacion).append(" = ").append(dia).append(" AND ").append(this.columna.mesDeCreacion).append(" = ").append(mes).append(" AND ").append(this.columna.agnoDeCreacion).append(" = ").append(agno);
                 return respuesta.toString();
             case "":
                 respuesta.append(" WHERE ").append(this.columna.celular).append(" = ").append(valor);
                 return respuesta.toString();
-            case "gestionado":
-                respuesta.append(" WHERE ").append(this.columna.fechaUltimoContacto).append("<>''");
+            case "dias":
+                fecha = valor.split("-");
+                dia = (fecha.length < 1) ? java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_MONTH) : Integer.parseInt(fecha[0]);
+                mes = (fecha.length < 2) ? java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) : Integer.parseInt(fecha[1]);
+                agno = (fecha.length < 3) ? java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) : Integer.parseInt(fecha[2]);
+                respuesta.append(" WHERE ").append(this.columna.diaUltimoContacto).append(" = ").append(dia).append(" AND ").append(this.columna.mesUltimoContacto).append(" = ").append(mes).append(" AND ").append(this.columna.agnoUltimoContacto).append(" = ").append(agno);
                 return respuesta.toString();
         }
         return "";
     }
 
     /**
+     * Método getColumns()
      *
+     * Devuelve combinaciones de formatos condicionales para consulta
+     *
+     * @param columnas
+     * @return
      */
     private String getColumns(String columnas) {
         StringBuilder respuesta = new StringBuilder();
@@ -231,11 +347,24 @@ public class Modelo {
     }
 
     /**
+     * <code>Contructor</code>
+     *
+     * @param connectionPool
+     * @throws java.sql.SQLException
+     */
+    public Modelo(DataSource connectionPool) throws SQLException {
+        //
+        this.connectionPool = connectionPool;
+        //
+        conection = this.connectionPool.getConnection();
+    }
+
+    /**
      * Definición de variables de clase
      */
     private DataSource connectionPool;
     private Connection conection;
     private PreparedStatement statement;
     private ResultSet resultSet;
-    private COLUMNA columna = new COLUMNA();
+    private final COLUMNA columna = new COLUMNA();
 }
