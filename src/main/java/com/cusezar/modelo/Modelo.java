@@ -227,7 +227,7 @@ public class Modelo {
         sql.append(columna.estado).append(" = ? ,");
         sql.append(columna.asignadoA).append(" = ? ");
         sql.append(" WHERE ");
-        sql.append(("".equals(column)) ? this.columna.celular : column).append(" = ?");
+        sql.append(("".equals(column)) ? this.columna.codigoConteo : column).append(" = ?");
         statement = conection.prepareStatement(sql.toString());
         int i = 1;
         statement.setBoolean(i++, cliente.isViable());

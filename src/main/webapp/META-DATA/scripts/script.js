@@ -1,5 +1,29 @@
+/** */
 
+function openSheet(sheet) {
+    var i;
+    var x = document.getElementsByClassName("sheet");
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    document.getElementById(sheet.innerHTML.toLowerCase()).style.display = "block";
+}
 
+function openBox(box) {
+    let backgrund = document.getElementById("app-options");
+    backgrund.style.display = "block";
+    let element = document.getElementById(`box-${box}`);
+    element.style.display = "block";
+}
+
+function closeBox(elem) {
+    let backgrund = document.getElementById("app-options");
+    backgrund.style.display = "none";
+    let element = document.getElementById(elem.parentNode.id);
+    element.style.display = "none";
+
+}
+/** */
 
 function filtro() {
 

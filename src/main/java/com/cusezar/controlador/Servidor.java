@@ -1,6 +1,6 @@
 /**
  * NO MODIFIQUE ESTE CÓDIGO
- * 
+ *
  * Licencia registrada Roverin Technologics - 2021
  */
 package com.cusezar.controlador;
@@ -10,6 +10,7 @@ import com.cusezar.modelo.Modelo;
 import com.cusezar.tools.CSVReader;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -361,7 +362,8 @@ public class Servidor extends HttpServlet {
     }
 
     /**
-     *
+     * Método sendError
+     * 
      * @param ex
      * @param request
      * @param response
@@ -369,9 +371,12 @@ public class Servidor extends HttpServlet {
      * @throws IOException
      */
     private void sendError(Exception ex, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+        StringBuilder resource = new StringBuilder();
+        resource.append(br.readLine());
         printer = response.getWriter();
         response.setContentType("application/json");
-        printer.write(new Gson().toJson(new Mensaje(new StringBuilder().append(" ¡ Error al ejecutar la solicitud ").append(request.getMethod()).append(" en el recurso ").append(request.getPathInfo()).append(" ! ").toString(), response.getStatus(), new ArrayList<Cliente>(), ex.getMessage())));
+        printer.write(new Gson().toJson(new Mensaje(new StringBuilder().append(" ¡ Error al ejecutar la solicitud ").append(request.getMethod()).append(" en el recurso ").append(request.getPathInfo()).append(" con la URI ").append(resource.toString()).append(" ! ").toString(), response.getStatus(), new ArrayList<Cliente>(), ex.getMessage())));
         printer.flush();
     }
 
