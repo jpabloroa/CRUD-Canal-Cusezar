@@ -9,21 +9,126 @@ function openSheet(sheet) {
     document.getElementById(sheet.innerHTML.toLowerCase()).style.display = "block";
 }
 
+function openCollapsible(collapsible) {
+    var i;
+    var x = document.getElementsByClassName("collapsible");
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    document.getElementById(collapsible.innerHTML.toLowerCase().replace(" ", "_")).style.display = "block";
+}
+
 function openBox(box) {
-    let backgrund = document.getElementById("app-options");
-    backgrund.style.display = "block";
+    let background = document.getElementById("app-options");
+    background.style.display = "block";
     let element = document.getElementById(`box-${box}`);
     element.style.display = "block";
 }
 
 function closeBox(elem) {
-    let backgrund = document.getElementById("app-options");
-    backgrund.style.display = "none";
+    let background = document.getElementById("app-options");
+    background.style.display = "none";
     let element = document.getElementById(elem.parentNode.id);
     element.style.display = "none";
 
 }
 /** */
+
+/**
+ * 
+ * @param {type} element
+ * @returns {undefined}
+ */
+function enviarWhatsAppPorProyecto(element) {
+    element.innerHTML = "Nuevo";
+    element.style.float = "right";
+    var array = getObjetosCliente();
+    var contactos = {};
+    for (var i = 0; i < array.length; i++) {
+        if (contactos[array[i].proyectoDeInteres] == null) {
+            contactos[array[i].proyectoDeInteres] = "";
+        }
+        contactos[array[i].proyectoDeInteres] += capitalize(array[i].nombre.split(" ")[0]) + ",57" + array[i].celular + "<br>";
+    }
+    var mainBox = document.getElementById("box-contacto");
+    mainBox.getElementsByClassName("content")[0].remove();
+    var contenidoBox = document.createElement("div");
+    contenidoBox.className = "content";
+    var listaProyectos = Object.keys(contactos);
+    for (var j = 0; j < listaProyectos.length; j++) {
+        contenidoBox.innerHTML += `<button style="display:block;width:100%;" onclick="openCollapsible(this)">${listaProyectos[j].toUpperCase()}</button>`;
+        var collapsible = document.createElement("div");
+        collapsible.id = listaProyectos[j].toLowerCase().replace(" ", "_");
+        collapsible.className = "collapsible";
+        var captionText = document.createElement("p");
+        captionText.contentEditable = "true";
+        captionText.innerHTML = `*[name]*`;
+        var clientList = document.createElement("p");
+        clientList.innerHTML += contactos[listaProyectos[j]];
+
+        collapsible.appendChild(clientList);
+        collapsible.appendChild(captionText);
+        contenidoBox.appendChild(collapsible);
+    }
+    mainBox.appendChild(contenidoBox);
+}
+
+/**
+ * 
+ * @param {type} element
+ * @returns {undefined}
+ */
+function enviarCorreoPorProyecto(element) {
+    element.innerHTML = "Nuevo";
+    element.style.float = "right";
+    var array = getObjetosCliente();
+    var contactos = {};
+    for (var i = 0; i < array.length; i++) {
+        if (contactos[array[i].proyectoDeInteres] == null) {
+            contactos[array[i].proyectoDeInteres] = "";
+        }
+        contactos[array[i].proyectoDeInteres] += array[i].correo + ",<br>";
+    }
+    var mainBox = document.getElementById("box-contacto");
+    mainBox.getElementsByClassName("content")[0].remove();
+    var contenidoBox = document.createElement("div");
+    contenidoBox.className = "content";
+    var listaProyectos = Object.keys(contactos);
+    for (var j = 0; j < listaProyectos.length; j++) {
+        contenidoBox.innerHTML += `<button style="display:block;width:100%;" onclick="openCollapsible(this)">${listaProyectos[j].toUpperCase()}</button>`;
+        var collapsible = document.createElement("div");
+        collapsible.id = listaProyectos[j].toLowerCase().replace(" ", "_");
+        collapsible.className = "collapsible";
+        var captionText = document.createElement("p");
+        captionText.contentEditable = "true";
+        captionText.innerHTML = `*[name]*`;
+        var clientList = document.createElement("p");
+        clientList.innerHTML += contactos[listaProyectos[j]];
+
+        collapsible.appendChild(clientList);
+        collapsible.appendChild(captionText);
+        contenidoBox.appendChild(collapsible);
+    }
+    mainBox.appendChild(contenidoBox);
+}
+
+function getObjetosCliente() {
+    var respuesta = [];
+    var columnas = document.getElementById("resp-table-body").getElementsByClassName("resp-table-row");
+    for (var i = 0; i < columnas.length; i++) {
+        let row = columnas[i];
+        var array = row.getElementsByClassName("table-body-cell");
+        let obj = {};
+        for (var j = 0; j < array.length; j++) {
+            obj[array[j].title] = array[j].innerHTML;
+        }
+        ;
+        obj["codigoConteo"] = row.id.split("-")[1];
+        respuesta.push(obj);
+    }
+    return respuesta;
+}
+
 
 function filtro() {
 
@@ -92,5 +197,9 @@ function insertar(tipo) {
         case "":
             break;
     }
+}
+
+function capitalize(word) {
+    return word[0].toUpperCase() + word.slice(1).toLowerCase();
 }
 

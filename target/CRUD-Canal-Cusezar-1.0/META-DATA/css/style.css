@@ -1,4 +1,4 @@
-html{
+html {
     font-family: Helvetica, sans-serif;
 }
 
@@ -78,10 +78,10 @@ html{
     padding: 5px;
     text-align: justify;
     border-bottom: 1px solid black;
-    
+
 }
 
-#resp-table #resp-table-body #editar{
+#resp-table #resp-table-body #editar {
     position: absolute;
     float: right;
     cursor: pointer;
@@ -140,10 +140,19 @@ button {
     cursor: pointer;
 }
 
+#app-options #box-contacto #content button {
+    display: flex;
+    flex-direction: column;
+}
+
 #app-options [id|=box] .sheet {
     display: none;
     margin: 5% auto;
+}
 
+#app-options [id|=box] .collapsible {
+    display: none;
+    margin: 5% auto;
 }
 
 #app-options #box-respuesta {

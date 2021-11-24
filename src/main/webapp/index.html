@@ -24,7 +24,11 @@
             <button onclick="openBox('actualizar')">Actualizar</button>
             <button onclick="openBox('insertar')">Agregar</button>
             <button onclick="openBox('contacto')">Asistente de contacto</button>
-
+            <button onclick="enviarWhatsAppPorProyecto()">wasap</button>
+            <!--<form id="formulario-buscar">
+                <select></select>
+                Buscar<input name="valor" type="search" onchange="buscarPorColumna()">
+            </form>-->
         </div>
     </div>
 
@@ -80,7 +84,7 @@
                     <div class="table-body-cell" contenteditable="true" title="prueba20">prueba20</div>
                     <div id="editar">X</div>
                 </div>-->
-                
+
 
 
                 <!---->
@@ -149,6 +153,10 @@
                 <button id="close-button" onclick="closeBox(this)">X</button>
             </div>
             <div id="box-contacto">
+                <h1>Bienvenido al asistente de envío de WhatsApp</h1>
+                <button onclick="enviarWhatsAppPorProyecto(this)">WhatsApp</button>
+                <button onclick="enviarCorreoPorProyecto(this)">Correo</button>
+                <div class="content"></div>
                 <button id="close-button" onclick="closeBox(this)">X</button>
             </div>
         </div>

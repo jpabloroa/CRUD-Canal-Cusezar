@@ -71,15 +71,10 @@ function accionar() {
 function setEditable(element) {
     element.contentEditable = "true";
     element.onblur = function () {
-        var array = [];
-        array = element.parentNode.getElementsByClassName("table-body-cell");
+        var array = element.parentNode.getElementsByClassName("table-body-cell");
         let obj = {};
-        var i = 0;
-        var size = array.length;
-        console.log(array.length);
-        while (i < size) {
+        for (var i = 0; i < array.length; i++) {
             obj[array[i].title] = array[i].innerHTML;
-            i++;
         };
         obj.codigoConteo = element.parentNode.id.split("-")[1];
         actualizarCliente(obj);
@@ -112,6 +107,7 @@ function insertarCliente(formato, valor) {
                 objeto.correo = xlsx[i].CORREO;
                 objeto.celular = xlsx[i].CELULAR;
                 objeto.medioPublicitario = xlsx[i].MEDIO;
+                objeto.proyectoDeInteres = xlsx[i].PROYECTO;
                 array.push(objeto);
             }
             break;
