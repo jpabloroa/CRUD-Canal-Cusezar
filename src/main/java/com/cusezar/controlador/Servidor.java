@@ -38,13 +38,12 @@ public class Servidor extends HttpServlet {
      *
      * Recibe como parámentros un objeto request y response Sintaxis:
      *
-     * -> Consulta:
-     * clientes/?formato=${formato}&columnas=${columnas}&maxFilas=${maxFilas}
+     * -> Consulta: clientes/?formato=${formato}&sql=${sql}&maxFilas=${maxFilas}
      * formato: JSON, HTML
      *
      * -> Consulta:
-     * clientes/ver/?formato=${formato}&columnas=${columnas}&maxFilas=${maxFilas}
-     * formato: JSON, HTML
+     * clientes/ver/?formato=${formato}&sql=${sql}&maxFilas=${maxFilas} formato:
+     * JSON, HTML
      *
      * -> Consulta:
      * clientes/ver/${columna}/${parámetro}?formato=${formato}&columnas=${columnas}&maxFilas=${maxFilas}
@@ -86,9 +85,9 @@ public class Servidor extends HttpServlet {
                         String columna = (arraySize > 1) ? paths[1] : "!¡";
                         String valor = (arraySize > 2 || !"!¡".equals(columna)) ? paths[2] : columna;
                         String formato = (request.getParameter("formato") == null) ? CONTENT.JSON : request.getParameter("formato").toLowerCase();
-                        String columnas = (request.getParameter("columnas") == null) ? "" : request.getParameter("columnas");
+                        String sql = (request.getParameter("sql") == null) ? "" : request.getParameter("sql");
                         int maxFilas = (request.getParameter("maxFilas") == null) ? 100 : Integer.parseInt(request.getParameter("maxFilas"));
-                        List<Cliente> listaRespuesta = modelo.getClientes(columnas, columna, valor, maxFilas);
+                        List<Cliente> listaRespuesta = modelo.getClientes(sql, columna, valor, maxFilas);
                         switch (formato) {
                             case CONTENT.JSON:
                                 jsonResponse(response, listaRespuesta, new StringBuilder().append("Se proyectan ").append(listaRespuesta.size()).append(" clientes").toString());
@@ -229,9 +228,7 @@ public class Servidor extends HttpServlet {
 
             //
             List<Cliente> listaRespuesta = new ArrayList<>();
-            Cliente cliente = (request.getAttribute(CONTROLADOR.ACTUALIZAR) != null) ? new Gson().fromJson((String) request.getAttribute(CONTROLADOR.ACTUALIZAR), Cliente.class
-            ) : new Gson().fromJson(new InputStreamReader(request.getInputStream()), Cliente.class
-            );
+            Cliente cliente = (request.getAttribute(CONTROLADOR.ACTUALIZAR) != null) ? new Gson().fromJson((String) request.getAttribute(CONTROLADOR.ACTUALIZAR), Cliente.class) : new Gson().fromJson(new InputStreamReader(request.getInputStream()), com.cusezar.modelo.Cliente.class);
             String valor = ("-".equals(path)) ? cliente.getCelular() : path;
             String columna = (request.getParameter("columna") == null) ? "" : request.getParameter("columna");
             String formato = (request.getParameter("formato") == null) ? CONTENT.JSON : request.getParameter("formato").toLowerCase();
@@ -243,6 +240,7 @@ public class Servidor extends HttpServlet {
                     //
                     listaSize = modelo.updateClientes(columna, valor, cliente);
                     listaRespuesta.add(cliente);
+                    jsonResponse(response, listaRespuesta, "perra");
                     break;
                 default:
                     throw new JsonSyntaxException(" Especifique un formato de envío válido ");
@@ -363,7 +361,7 @@ public class Servidor extends HttpServlet {
 
     /**
      * Método sendError
-     * 
+     *
      * @param ex
      * @param request
      * @param response

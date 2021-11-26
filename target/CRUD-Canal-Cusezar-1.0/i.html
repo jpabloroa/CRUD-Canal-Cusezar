@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,18 +8,39 @@
     <title>Document</title>
     <link rel="stylesheet" href="META-DATA/css/style.css">
     <style>
-        div{
+        div {
             width: 510px;
             display: table-cell;
         }
     </style>
 </head>
-<body>
+
+<body style="position: relative;">
     <div>
         <div class="table-body-cell" contenteditable="true">
             eynu
         </div>
+        <button onclick="">gonorreo</button>
     </div>
-    
+    <div id="context-menu-deployable" style="display: none;
+    position: absolute;
+    width: 10vw;
+    height: 15vh;
+    background-color: white;
+    color: black;">gonorea</div>
+    <script>
+        // if (document.addEventListener) {
+            document.addEventListener('contextmenu', function (e) {
+            console.log(`Menú abierto en X:${e.clientX} - Y:${e.clientY}`);
+            e.preventDefault();
+        }, false);
+       // } else {
+       //     document.attachEvent('oncontextmenu', function () {
+       //         alert("You've tried to open context menu");
+      //          window.event.returnValue = false;
+      //      });
+       // }
+    </script>
 </body>
+
 </html>

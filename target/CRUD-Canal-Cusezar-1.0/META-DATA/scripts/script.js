@@ -32,6 +32,63 @@ function closeBox(elem) {
     element.style.display = "none";
 
 }
+
+//function showDeleteOption(this){
+
+//}
+/** */
+
+/** */
+
+/**
+ * 
+ * @param {type} element
+ * @returns {undefined}
+ */
+function filtrarPorProyecto(element, instance) {
+    switch (instance) {
+        case 1:
+            break;
+        case 3:
+            break;
+        default:
+            element.innerHTML = "Nuevo";
+            element.style.float = "right";
+            var array = getObjetosCliente();
+            var contactos = {};
+            for (var i = 0; i < array.length; i++) {
+                if (contactos[array[i].proyectoDeInteres] == null) {
+                    contactos[array[i].proyectoDeInteres] = "";
+                }
+                contactos[array[i].proyectoDeInteres] += array[i].correo + ",<br>";
+            }
+            var mainBox = document.getElementById("box-contacto");
+            mainBox.getElementsByClassName("content")[0].remove();
+            var contenidoBox = document.createElement("div");
+            contenidoBox.className = "content";
+            var listaProyectos = Object.keys(contactos);
+            for (var j = 0; j < listaProyectos.length; j++) {
+                contenidoBox.innerHTML += `<button style="display:block;width:100%;" onclick="openCollapsible(this)">${listaProyectos[j].toUpperCase()}</button>`;
+                var collapsible = document.createElement("div");
+                collapsible.id = listaProyectos[j].toLowerCase().replace(" ", "_");
+                collapsible.className = "collapsible";
+                var captionText = document.createElement("p");
+                captionText.contentEditable = "true";
+                captionText.innerHTML = `*[name]*`;
+                var clientList = document.createElement("p");
+                clientList.innerHTML += contactos[listaProyectos[j]];
+
+                collapsible.appendChild(clientList);
+                collapsible.appendChild(captionText);
+                contenidoBox.appendChild(collapsible);
+            }
+            mainBox.appendChild(contenidoBox);
+            break;    
+    }
+}
+
+
+
 /** */
 
 /**

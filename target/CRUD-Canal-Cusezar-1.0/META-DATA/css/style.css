@@ -20,6 +20,15 @@ html {
     margin: 0;
 }
 
+#context-menu-deployable {
+    display: none;
+    position: absolute;
+    width: 10vw;
+    height: 15vh;
+    background-color: white;
+    color: black;
+}
+
 /**/
 
 /* Tabla */

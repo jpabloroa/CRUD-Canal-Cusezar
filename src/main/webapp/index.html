@@ -16,15 +16,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
 </head>
 
-<body>
+<body style="position: relative;">
 
     <!-- App buttons -->
     <div id="app-toolbar">
         <div class="tools">
             <button onclick="openBox('actualizar')">Actualizar</button>
             <button onclick="openBox('insertar')">Agregar</button>
+            <button onclick="openBox('filtrar')">Filtrar</button>
             <button onclick="openBox('contacto')">Asistente de contacto</button>
-            <button onclick="enviarWhatsAppPorProyecto()">wasap</button>
             <!--<form id="formulario-buscar">
                 <select></select>
                 Buscar<input name="valor" type="search" onchange="buscarPorColumna()">
@@ -50,7 +50,7 @@
                 <div class="table-header-cell">Habeas Data</div>
                 <div class="table-header-cell">Contacto</div>
                 <div class="table-header-cell">Contacto Efectivo</div>
-                <div class="table-header-cell">Fecha Último Contacto</div>
+                <!--<div class="table-header-cell">Fecha Último Contacto</div>-->
                 <div class="table-header-cell">Calificado</div>
                 <div class="table-header-cell">Proyecto Calificado</div>
                 <div class="table-header-cell">Visita agendada</div>
@@ -152,6 +152,11 @@
                 </div>
                 <button id="close-button" onclick="closeBox(this)">X</button>
             </div>
+            <div id="box-filtrar">
+                <h1>Filtrar</h1>
+                <div class="content"></div>
+                <button id="close-button" onclick="closeBox(this)">X</button>
+            </div>
             <div id="box-contacto">
                 <h1>Bienvenido al asistente de envío de WhatsApp</h1>
                 <button onclick="enviarWhatsAppPorProyecto(this)">WhatsApp</button>
@@ -161,6 +166,7 @@
             </div>
         </div>
     </div>
+    <div id="context-menu-deployable"></div>
 </body>
 
 </html>

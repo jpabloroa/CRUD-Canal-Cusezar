@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
@@ -30,9 +31,7 @@ public class Modelo {
     class COLUMNA {
 
         //Nombre de columnas
-        public String diaDeCreacion = "diaDeCreacion";
-        public String mesDeCreacion = "mesDeCreacion";
-        public String agnoDeCreacion = "agnoDeCreacion";
+        public String fechaDeCreacion = "fechaDeCreacion";
         public String codigoConteo = "codigoConteo";
         public String viable = "viable";
         public String nombre = "nombre";
@@ -43,16 +42,15 @@ public class Modelo {
         public String proyectoDeInteres = "proyectoDeInteres";
         public String gestionDesdeSalaDeVentas = "gestionDesdeSalaDeVentas";
         public String habeasData = "habeasData";
-        public String diaUltimoContacto = "diaUltimoContacto";
-        public String mesUltimoContacto = "mesUltimoContacto";
-        public String agnoUltimoContacto = "agnoUltimoContacto";
+        public String fechaDeContacto = "fechaDeContacto";
         public String contactoEfectivo = "contactoEfectivo";
+        public String fechaDeContactoEfectivo = "fechaDeContactoEfectivo";
         public String proyectoCalificado = "proyectoCalificado";
-        public String diaVisita = "diaVisita";
-        public String mesVisita = "mesVisita";
-        public String agnoVisita = "agnoVisita";
+        public String fechaVisitaAgendada = "fechaVisitaAgendada";
         public String visitaEfectiva = "visitaEfectiva";
+        public String fechaVisitaEfectiva = "fechaVisitaEfectiva";
         public String estado = "estado";
+        public String fechaModificacionEstado = "fechaModificacionEstado";
         public String asignadoA = "asignadoA";
     }
 
@@ -61,19 +59,19 @@ public class Modelo {
      *
      * Genera una lista de clientes en base a una consulta
      *
-     * @param columnas
+     * @param sql
      * @param columna
      * @param valor
      * @param maxFilas
      * @return Clientes - Objeto tipo List
      * @throws SQLException
      */
-    public List<Cliente> getClientes(String columnas, String columna, String valor, int maxFilas) throws SQLException {
+    public List<Cliente> getClientes(String sql, String columna, String valor, int maxFilas) throws SQLException {
 
         //
-        StringBuilder sql = new StringBuilder();
-        sql.append(getColumns(columnas)).append(getQueryFromColumn(columna, valor)).append(" LIMIT ").append(maxFilas);
-        statement = conection.prepareStatement(sql.toString());
+        StringBuilder sqlCode = new StringBuilder();
+        sqlCode.append(getQuery(sql)).append(getQueryFromColumn(columna, valor)).append(" LIMIT ").append(maxFilas);
+        statement = conection.prepareStatement(sqlCode.toString());
 
         //
         resultSet = statement.executeQuery();
@@ -82,9 +80,7 @@ public class Modelo {
         List<Cliente> lista = new ArrayList<>();
         while (resultSet.next()) {
             Cliente cliente = new Cliente();
-            cliente.setDiaDeCreacion(resultSet.getInt("diaDeCreacion"));
-            cliente.setMesDeCreacion(resultSet.getInt("mesDeCreacion"));
-            cliente.setAgnoDeCreacion(resultSet.getInt("agnoDeCreacion"));
+            cliente.setFechaDeCreacion(resultSet.getTimestamp("fechaDeCreacion"));
             cliente.setNombre(resultSet.getString("nombre"));
             cliente.setCorreo(resultSet.getString("correo"));
             cliente.setCelular(resultSet.getString("celular"));
@@ -95,16 +91,15 @@ public class Modelo {
             cliente.setProyectoDeInteres(resultSet.getString("proyectoDeInteres"));
             cliente.setGestionDesdeSalaDeVentas(resultSet.getBoolean("gestionDesdeSalaDeVentas"));
             cliente.setHabeasData(resultSet.getBoolean("habeasData"));
-            cliente.setDiaUltimoContacto(resultSet.getInt(this.columna.diaUltimoContacto));
-            cliente.setMesUltimoContacto(resultSet.getInt(this.columna.mesUltimoContacto));
-            cliente.setAgnoUltimoContacto(resultSet.getInt(this.columna.agnoUltimoContacto));
+            cliente.setFechaDeContacto(resultSet.getTimestamp("fechaDeContacto"));
             cliente.setContactoEfectivo(resultSet.getBoolean("contactoEfectivo"));
+            cliente.setFechaDeContactoEfectivo(resultSet.getTimestamp("fechaDeContactoEfectivo"));
             cliente.setProyectoCalificado(resultSet.getString("proyectoCalificado"));
-            cliente.setDiaVisita(resultSet.getInt("diaVisita"));
-            cliente.setMesVisita(resultSet.getInt("mesVisita"));
-            cliente.setAgnoVisita(resultSet.getInt("agnoVisita"));
+            cliente.setFechaVisitaAdendada(resultSet.getTimestamp("fechaVisitaAgendada"));
             cliente.setVisitaEfectiva(resultSet.getBoolean("visitaEfectiva"));
+            cliente.setFechaVisitaEfectiva(resultSet.getTimestamp("fechaVisitaEfectiva"));
             cliente.setEstado(resultSet.getString("estado"));
+            cliente.setFechaModificacionEstado(resultSet.getTimestamp("fechaModificacionEstado"));
             cliente.setAsignadoA(resultSet.getString(this.columna.asignadoA));
 
             //
@@ -131,9 +126,7 @@ public class Modelo {
         //
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO clientes (");
-        sql.append(columna.diaDeCreacion).append(",");
-        sql.append(columna.mesDeCreacion).append(",");
-        sql.append(columna.agnoDeCreacion).append(",");
+        sql.append(columna.fechaDeCreacion).append(",");
         sql.append(columna.viable).append(",");
         sql.append(columna.nombre).append(",");
         sql.append(columna.correo).append(",");
@@ -143,45 +136,41 @@ public class Modelo {
         sql.append(columna.proyectoDeInteres).append(",");
         sql.append(columna.gestionDesdeSalaDeVentas).append(",");
         sql.append(columna.habeasData).append(",");
-        sql.append(columna.diaUltimoContacto).append(",");
-        sql.append(columna.mesUltimoContacto).append(",");
-        sql.append(columna.agnoUltimoContacto).append(",");
+        sql.append(columna.fechaDeContacto).append(",");
         sql.append(columna.contactoEfectivo).append(",");
+        sql.append(columna.fechaDeContactoEfectivo).append(",");
         sql.append(columna.proyectoCalificado).append(",");
-        sql.append(columna.diaVisita).append(",");
-        sql.append(columna.mesVisita).append(",");
-        sql.append(columna.agnoVisita).append(",");
+        sql.append(columna.fechaVisitaAgendada).append(",");
         sql.append(columna.visitaEfectiva).append(",");
+        sql.append(columna.fechaVisitaEfectiva).append(",");
         sql.append(columna.estado).append(",");
+        sql.append(columna.fechaModificacionEstado).append(",");
         sql.append(columna.asignadoA).append(")");
-        sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?, ?, ?)");
+        sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         statement = conection.prepareStatement(sql.toString());
 
         //
         for (Cliente cliente : Clientes) {
             int i = 1;
-            statement.setInt(i++, cliente.getDiaDeCreacion());
-            statement.setInt(i++, cliente.getMesDeCreacion());
-            statement.setInt(i++, cliente.getAgnoDeCreacion());
+            statement.setTimestamp(i++, new Timestamp(cliente.getFechaDeCreacion().getTime()));
             statement.setBoolean(i++, cliente.isViable());
             statement.setString(i++, cliente.getNombre());
             statement.setString(i++, (cliente.getCorreo() == null) ? null : cliente.getCorreo().trim());
             statement.setString(i++, (cliente.getCelular() == null) ? null : cliente.getCelular().trim());
-            statement.setString(i++, cliente.getMedioPublicitario());
-            statement.setString(i++, cliente.getZonaBusqueda());
-            statement.setString(i++, cliente.getProyectoDeInteres());
+            statement.setString(i++, cliente.getMedioPublicitario().toUpperCase());
+            statement.setString(i++, cliente.getZonaBusqueda().toUpperCase());
+            statement.setString(i++, cliente.getProyectoDeInteres().toUpperCase());
             statement.setBoolean(i++, cliente.isGestionDesdeSalaDeVentas());
             statement.setBoolean(i++, cliente.isHabeasData());
-            statement.setInt(i++, cliente.getDiaUltimoContacto());
-            statement.setInt(i++, cliente.getMesUltimoContacto());
-            statement.setInt(i++, cliente.getAgnoUltimoContacto());
+            statement.setTimestamp(i++, (cliente.getFechaDeContacto() == null) ? null : new Timestamp(cliente.getFechaDeContacto().getTime()));
             statement.setBoolean(i++, cliente.isContactoEfectivo());
+            statement.setTimestamp(i++, (cliente.getFechaDeContactoEfectivo() == null) ? null : new Timestamp(cliente.getFechaDeContactoEfectivo().getTime()));
             statement.setString(i++, cliente.getProyectoCalificado());
-            statement.setInt(i++, cliente.getDiaVisita());
-            statement.setInt(i++, cliente.getMesVisita());
-            statement.setInt(i++, cliente.getAgnoVisita());
+            statement.setTimestamp(i++, (cliente.getFechaVisitaAdendada() == null) ? null : new Timestamp(cliente.getFechaVisitaAdendada().getTime()));
             statement.setBoolean(i++, cliente.isVisitaEfectiva());
+            statement.setTimestamp(i++, (cliente.getFechaVisitaEfectiva() == null) ? null : new Timestamp(cliente.getFechaVisitaEfectiva().getTime()));
             statement.setString(i++, cliente.getEstado());
+            statement.setTimestamp(i++, (cliente.getFechaModificacionEstado() == null) ? null : new Timestamp(cliente.getFechaModificacionEstado().getTime()));
             statement.setString(i++, cliente.getAsignadoA());
             statement.addBatch();
         }
@@ -215,16 +204,15 @@ public class Modelo {
         sql.append(columna.proyectoDeInteres).append(" = ? ,");
         sql.append(columna.gestionDesdeSalaDeVentas).append(" = ? ,");
         sql.append(columna.habeasData).append(" = ? ,");
-        sql.append(columna.diaUltimoContacto).append(" = ? ,");
-        sql.append(columna.mesUltimoContacto).append(" = ? ,");
-        sql.append(columna.agnoUltimoContacto).append(" = ? ,");
+        sql.append(columna.fechaDeContacto).append(" = ? ,");
         sql.append(columna.contactoEfectivo).append(" = ? ,");
+        sql.append(columna.fechaDeContactoEfectivo).append(" = ? ,");
         sql.append(columna.proyectoCalificado).append(" = ? ,");
-        sql.append(columna.diaVisita).append(" = ? ,");
-        sql.append(columna.mesVisita).append(" = ? ,");
-        sql.append(columna.agnoVisita).append(" = ? ,");
+        sql.append(columna.fechaVisitaAgendada).append(" = ? ,");
         sql.append(columna.visitaEfectiva).append(" = ? ,");
+        sql.append(columna.fechaVisitaEfectiva).append(" = ? ,");
         sql.append(columna.estado).append(" = ? ,");
+        sql.append(columna.fechaModificacionEstado).append(" = ? ,");
         sql.append(columna.asignadoA).append(" = ? ");
         sql.append(" WHERE ");
         sql.append(("".equals(column)) ? this.columna.codigoConteo : column).append(" = ?");
@@ -234,21 +222,20 @@ public class Modelo {
         statement.setString(i++, cliente.getNombre());
         statement.setString(i++, (cliente.getCorreo() == null) ? null : cliente.getCorreo().trim());
         statement.setString(i++, (cliente.getCelular() == null) ? null : cliente.getCelular().trim());
-        statement.setString(i++, cliente.getMedioPublicitario());
-        statement.setString(i++, cliente.getZonaBusqueda());
-        statement.setString(i++, cliente.getProyectoDeInteres());
+        statement.setString(i++, cliente.getMedioPublicitario().toUpperCase());
+        statement.setString(i++, cliente.getZonaBusqueda().toUpperCase());
+        statement.setString(i++, cliente.getProyectoDeInteres().toUpperCase());
         statement.setBoolean(i++, cliente.isGestionDesdeSalaDeVentas());
         statement.setBoolean(i++, cliente.isHabeasData());
-        statement.setInt(i++, cliente.getDiaUltimoContacto());
-        statement.setInt(i++, cliente.getMesUltimoContacto());
-        statement.setInt(i++, cliente.getAgnoUltimoContacto());
+        statement.setTimestamp(i++, (cliente.getFechaDeContacto() == null) ? null : new Timestamp(cliente.getFechaDeContacto().getTime()));
         statement.setBoolean(i++, cliente.isContactoEfectivo());
+        statement.setTimestamp(i++, (cliente.getFechaDeContactoEfectivo() == null) ? null : new Timestamp(cliente.getFechaDeContactoEfectivo().getTime()));
         statement.setString(i++, cliente.getProyectoCalificado());
-        statement.setInt(i++, cliente.getDiaVisita());
-        statement.setInt(i++, cliente.getMesVisita());
-        statement.setInt(i++, cliente.getAgnoVisita());
+        statement.setTimestamp(i++, (cliente.getFechaVisitaAdendada() == null) ? null : new Timestamp(cliente.getFechaVisitaAdendada().getTime()));
         statement.setBoolean(i++, cliente.isVisitaEfectiva());
+        statement.setTimestamp(i++, (cliente.getFechaVisitaEfectiva() == null) ? null : new Timestamp(cliente.getFechaVisitaEfectiva().getTime()));
         statement.setString(i++, cliente.getEstado());
+        statement.setTimestamp(i++, (cliente.getFechaModificacionEstado() == null) ? null : new Timestamp(cliente.getFechaModificacionEstado().getTime()));
         statement.setString(i++, cliente.getAsignadoA());
         statement.setObject(i++, valor);
         //
@@ -304,23 +291,23 @@ public class Modelo {
         String[] fecha;
         int dia, mes, agno;
         switch (choice) {
-            case "fecha":
+            /*case "fecha":
                 fecha = valor.split("-");
                 dia = (fecha.length < 1) ? java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_MONTH) : Integer.parseInt(fecha[0]);
                 mes = (fecha.length < 2) ? java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) : Integer.parseInt(fecha[1]);
                 agno = (fecha.length < 3) ? java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) : Integer.parseInt(fecha[2]);
-                respuesta.append(" WHERE ").append(this.columna.diaDeCreacion).append(" = ").append(dia).append(" AND ").append(this.columna.mesDeCreacion).append(" = ").append(mes).append(" AND ").append(this.columna.agnoDeCreacion).append(" = ").append(agno);
-                return respuesta.toString();
+                //respuesta.append(" WHERE ").append(this.columna.diaDeCreacion).append(" = ").append(dia).append(" AND ").append(this.columna.mesDeCreacion).append(" = ").append(mes).append(" AND ").append(this.columna.agnoDeCreacion).append(" = ").append(agno);
+                return respuesta.toString();*/
             case "":
                 respuesta.append(" WHERE ").append(this.columna.celular).append(" = ").append(valor);
                 return respuesta.toString();
-            case "dias":
+            /*case "dias":
                 fecha = valor.split("-");
                 dia = (fecha.length < 1) ? java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_MONTH) : Integer.parseInt(fecha[0]);
                 mes = (fecha.length < 2) ? java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) : Integer.parseInt(fecha[1]);
                 agno = (fecha.length < 3) ? java.util.Calendar.getInstance().get(java.util.Calendar.YEAR) : Integer.parseInt(fecha[2]);
                 respuesta.append(" WHERE ").append(this.columna.diaUltimoContacto).append(" = ").append(dia).append(" AND ").append(this.columna.mesUltimoContacto).append(" = ").append(mes).append(" AND ").append(this.columna.agnoUltimoContacto).append(" = ").append(agno);
-                return respuesta.toString();
+                return respuesta.toString();*/
         }
         return "";
     }
@@ -333,17 +320,30 @@ public class Modelo {
      * @param columnas
      * @return
      */
-    private String getColumns(String columnas) {
+    private String getQuery(String columnas) {
         StringBuilder respuesta = new StringBuilder();
-        switch (columnas) {
-            case "":
-                respuesta.append("SELECT * FROM clientes");
-                return respuesta.toString();
-            case "-informe":
-                respuesta.append("SELECT * FROM clientes WHERE ").append(this.columna.mesDeCreacion).append(" = ").append("").append(" AND ").append(this.columna.agnoDeCreacion).append(" = ").append("").append(" AND ").append(this.columna.contactoEfectivo).append(" = ").append("").append(" AND ").append("").append(" = ").append("").append(" AND ").append("").append(" = ").append("").append(" AND ").append("").append(" = ").append("").append(" AND ");
-                return respuesta.toString();
+        if (columnas == null || "".equals(columnas)) {
+            respuesta.append("SELECT * FROM clientes");
+            return respuesta.toString();
+        } else if ("-".equals(columnas.substring(0, 1))) {
+            String auxiliar = columnas.substring(1);
+            switch (auxiliar) {
+                case "":
+                    respuesta.append("SELECT * FROM clientes");
+                    return respuesta.toString();
+                /*case "informe":
+                    respuesta.append("SELECT * FROM clientes WHERE ").append(this.columna.mesDeCreacion).append(" = ").append("").append(" AND ").append(this.columna.agnoDeCreacion).append(" = ").append("").append(" AND ").append(this.columna.contactoEfectivo).append(" = ").append("").append(" AND ").append("").append(" = ").append("").append(" AND ").append("").append(" = ").append("").append(" AND ").append("").append(" = ").append("").append(" AND ");
+                    return respuesta.toString();*/
+                case "sin-gestion":
+                    respuesta.append("SELECT * FROM clientes");
+                    return respuesta.toString();
+                case "hoy":
+                default:
+                    return columnas;
+            }
+        } else {
+            return columnas;
         }
-        return "";
     }
 
     /**
