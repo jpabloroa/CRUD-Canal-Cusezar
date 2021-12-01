@@ -36,68 +36,64 @@ function cargarClientes() {
     ajaxrequest.send();
 }
 
+function nuevaFilaCliente(columna, title, info, valor, option) {
+    var valorHTML = "";
+    switch (option) {
+        case "opcion":
+            valorHTML = `<select>${(valor == 1) ? "<option selected='selected' value='true'>SI</option><option value='false'>NO</option>" : "<option selected='selected' value='false'>NO</option><option value='true'>SI</option>"}</select>`;
+            break;
+        case "opcion-fecha":
+            valorHTML = `<select>${(valor != null) ? "<option selected='selected' value='true'>SI</option><option>NO</option>" : "<option selected='selected' value='false'>NO</option><option>SI</option>"}</select><input contenteditable="false" ${(valor != null) ? "value='" + new Date(valor).toISOString().substring(0, 10) + "'" : ""} style="display:none;" type="date">`;
+            break;
+        case "opcion-texto":
+            valorHTML = `<select>${(valor != null) ? "<option selected='selected' value='true'>SI</option><option>NO</option>" : "<option selected='selected' value='false'>NO</option><option>SI</option>"}</select><input contenteditable="false" ${(valor != null) ? "value='" + valor + "'" : ""} style="display:none;" type="text">`;
+            break;
+        case "fecha":
+            valorHTML = `<input type="date" ${(valor == null) ? "" : "value='" + new Date(valor).toISOString().substring(0, 10) + "'"}>`;
+            break;
+        default:
+            valorHTML = `${(valor == null) ? "-" : valor}`
+            break;
+    }
+    return `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="${columna}" title="${title}" info="${info}" tipo="${option}">${valorHTML}</div>`;
+}
+
 function cargarClientes_agregarFila(obj) {
     var cliente = obj;
     var tabla = document.createElement("div");
     tabla.id = `cliente-${cliente.codigoConteo}`;
     tabla.className = "resp-table-row";
-    tabla.innerHTML += `<div class="table-body-cell" columna="fechaDeCreacion" title="Fecha de creación" info="Creado en :${cliente.fechaDeCreacion}" tipo="fecha">${cliente.fechaDeCreacion}</div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="viable" title="Viable" info="" tipo="opcion"><select>${(cliente.viable == 1) ? "<option selected='selected'>SI</option><option>NO</option>" : "<option selected='selected'>NO</option><option>SI</option>"}</select></div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="nombre" title="" info="Nombre del cliente" tipo="texto">${(cliente.nombre == null) ? "-" : cliente.nombre}</div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="correo" title="Correo electrónico" info="" tipo="texto">${(cliente.correo == null) ? "-" : cliente.correo}</div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="celular" title="Número de celular" info="" tipo="texto">${(cliente.celular == null) ? "-" : cliente.celular}</div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="medioPublicitario" title="Medio publicitario" info="" tipo="texto">${(cliente.medioPublicitario == null) ? "-" : cliente.medioPublicitario}</div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="zonaBusqueda" title="Zona de búsqueda" info="" tipo="texto">${(cliente.zonaBusqueda == null) ? "-" : cliente.zonaBusqueda}</div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="proyectoDeInteres" title="Proyecto de interés" info="" tipo="texto">${(cliente.proyectoDeInteres == null) ? "-" : cliente.proyectoDeInteres}</div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="gestionDesdeSalaDeVentas" title="Gestionado por sala de ventas" info="" tipo="opcion"><select>${(cliente.gestionDesdeSalaDeVentas == 1) ? "<option selected='selected'>SI</option><option>NO</option>" : "<option selected='selected' >NO</option><option>SI</option>"}</select></div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="habeasData" title="Autoriza tratamiento de datos" info="" tipo="opcion"><select>${(cliente.habeasData == 1) ? "<option selected='selected'>SI</option><option>NO</option>" : "<option selected='selected'>NO</option><option>SI</option>"}</select></div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="contactado" title="Contactado" info="${(cliente.contactado == 1) ? "Contactado el " + cliente.fechaDeContacto : "No ha sido contactado"}" tipo="opcion"><select>${(cliente.contactado == 1) ? "<option selected='selected' >SI</option><option>NO</option>" : "<option selected='selected'>NO</option><option>SI</option>"}</select></div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="contactoEfectivo" title="Contacto efectivo" info="${(cliente.contactoEfectivo == 1) ? "Último contacto el " + cliente.fechaDeContactoEfectivo : "No ha sido registrado como contacto efectivo"}" tipo="opcion"><select>${(cliente.contactoEfectivo == 1) ? "<option selected='selected'>SI</option><option>NO</option>" : "<option selected='selected'>NO</option><option>SI</option>"}</select></div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="calificado" title="Calificado" info="" tipo="opcion"><select>${(cliente.calificado == 1) ? "<option selected='selected'>SI</option><option>NO</option>" : "<option selected='selected'>NO</option><option>SI</option>"}</select></div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="proyectoCalificado" title="Proyecto calificado" info="" tipo="texto">${(cliente.proyectoCalificado == null) ? "-" : cliente.proyectoCalificado}</div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="visitaAgendada" title="Visita agendada" info="" tipo="opcion"><select>${(cliente.visitaAgendada == 1) ? "<option selected='selected'>SI</option><option>NO</option>" : "<option selected='selected'>NO</option><option>SI</option>"}</select></div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="fechaVisitaAgendada" title="Fecha de visita efectiva" info="" tipo="fecha"><input type="date" ${(cliente.fechaVisitaAgendada == null) ? "" : "value='" + new Date(cliente.fechaVisitaAgendada).toISOString().substring(0, 10) + "'"}></div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="visitaEfectiva" title="Visita efectiva" info="" tipo="opcion"><select>${(cliente.visitaEfectiva == 1) ? "<option selected='selected'>SI</option><option>NO</option>" : "<option selected='selected'>NO</option><option>SI</option>"}</select></div> `;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="estado" title="Estado del cliente" info="" tipo="texto"> ${(cliente.estado == null) ? "-" : cliente.estado}</div>`;
-    tabla.innerHTML += `<div class="table-body-cell" onclick="setEditable(this)" onblur="nonEditable(this)" columna="asignadoA" title="Gestion asignada a" info="" tipo="texto">${(cliente.asignadoA == null) ? "-" : cliente.asignadoA}</div>`;
-    //tabla.innerHTML += `< div class="table-body-cell" ondblclick = "setEditable(this)" onblur = "nonEditable(this)" columna = "${cliente}" title = "" info = "" tipo = "texto" > ${ cliente }</div > `;
+    tabla.innerHTML += nuevaFilaCliente("fechaDeCreacion", "Fecha de creación", "Creado en -", cliente.fechaDeCreacion, "texto");
+    tabla.innerHTML += nuevaFilaCliente("viable", "Contacto viable", "¿Es viable?", cliente.viable, "opcion");
+    tabla.innerHTML += nuevaFilaCliente("nombre", "Nombre del cliente", "El nombre del cliente es -", cliente.nombre, "texto");
+    tabla.innerHTML += nuevaFilaCliente("correo", "Correo del cliente", "El correo del cliente es -", cliente.correo, "texto");
+    tabla.innerHTML += nuevaFilaCliente("celular", "Celular del cliente", "El celular del cliente es -", cliente.celular, "texto");
+    tabla.innerHTML += nuevaFilaCliente("medioPublicitario", "Medio publicitario del cliente", "Cliente se registra en -", cliente.medioPublicitario, "texto");
+    tabla.innerHTML += nuevaFilaCliente("zonaBusqueda", "Zona de búsqueda", "Cliente busca en la zona de -", cliente.zonaBusqueda, "texto");
+    tabla.innerHTML += nuevaFilaCliente("proyectoDeInteres", "Proyecto de interés", "Cliente interesado en -", cliente.proyectoDeInteres, "texto");
+    tabla.innerHTML += nuevaFilaCliente("gestionDesdeSalaDeVentas", "Gestión desde cero S/V", "Gestionado por sala de ventas", cliente.gestionDesdeSalaDeVentas, "opcion");
+    tabla.innerHTML += nuevaFilaCliente("habeasData", "Habeas data", "Habeas data", cliente.habeasData, "opcion");
+    tabla.innerHTML += nuevaFilaCliente("fechaDeContacto", "Contactado", "El cliente fue contactado el -", cliente.fechaDeContacto, "opcion-fecha");
+    tabla.innerHTML += nuevaFilaCliente("fechaDeContactoEfectivo", "Contacto efectivo", "El cliente generó una respuesta en -", cliente.fechaDeContactoEfectivo, "opcion-fecha");
+    tabla.innerHTML += nuevaFilaCliente("proyectoCalificado", "Calificado", "El cliente muestra interes en -", cliente.proyectoCalificado, "opcion-texto");
+    tabla.innerHTML += nuevaFilaCliente("fechaVisitaAgendada", "Fecha de visita agendada", "El cliente agenda visita para -", cliente.fechaVisitaAgendada, "fecha");
+    tabla.innerHTML += nuevaFilaCliente("fechaVisitaEfectiva", "Visita efectiva", "El cliente visitó la sala el día -", cliente.fechaVisitaEfectiva, "opcion-fecha");
+    tabla.innerHTML += nuevaFilaCliente("estado", "Estado", "El estado del cliente es -", cliente.estado, "texto");
+    tabla.innerHTML += nuevaFilaCliente("asignadoA", "Asignado a", "El cliente es gestionado por -", cliente.asignadoA, "texto");
 
-
-
-    /*
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "fecha" info = "" data = "${cliente.fechaDeCreacion}" title = "Fecha de creación" columna = "fechaCreacion" > Creado en: ${ cliente.fechaDeCreacion }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "opcion" info = "" data = "${cliente.viable}" title = "¿Es viable?" columna = "viable" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.viable) ? "SI" : "NO" }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "texto" info = "" data = "${cliente.nombre}" title = "Nombre del cliente" columna = "nombre" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.nombre == null) ? "-" : cliente.nombre }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "texto" info = "" data = "${cliente.correo}" title = "Correo del cliente" columna = "correo" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.correo == null) ? "-" : cliente.correo }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "texto" info = "" data = "${cliente.celular}" title = "Celular del cliente" columna = "celular" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.celular == null) ? "-" : cliente.celular }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "texto" info = "" data = "${cliente.medioPublicitario}" title = "Medio publicitario" columna = "medioPublicitario" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.medioPublicitario == null) ? "-" : cliente.medioPublicitario }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "texto" info = "" data = "${cliente.zonaBusqueda}" title = "Zona de Búsqueda" columna = "zonaBusqueda" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.zonaBusqueda == null) ? "-" : cliente.zonaBusqueda }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "texto" info = "" data = "${cliente.proyectoDeInteres}" title = "Proyecto de Interés" columna = "proyectoDeInteres" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.proyectoDeInteres == null) ? "-" : cliente.proyectoDeInteres }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "opcion" info = "" data = "${cliente.gestionDesdeSalaDeVentas}" title = "¿Gestionado por S/V?" columna = "gestionDesdeSalaDeVentas" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.gestionDesdeSalaDeVentas) ? "SI" : "NO" }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "opcion" info = "" data = "${cliente.habeasData}" title = "Habeas Data" columna = "habeasData" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.habeasData) ? "SI" : "NO" }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "opcion" info = "" data = "${cliente.contactado}" title = "Contactado" columna = "contactado" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.contactado) ? "SI" : "NO" }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "opcion" info = "" data = "${cliente.contactoEfectivo}" title = "Contacto Efectivo" columna = "contactoEfectivo" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.contactoEfectivo) ? "SI" : "NO" }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "fecha" info = "" data = "${cliente.fechaDeContacto}" title = "Fecha de último contacto" columna = "fechaUltimoContacto" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.fechaDeContacto == null) ? "-/-/-" : cliente.fechaDeContacto }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "opcion" info = "" data = "${cliente.calificado}" title = "¿Contacto calificado?" columna = "calificado" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.calificado) ? "SI" : "NO" }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "opcion" info = "" data = "${cliente.proyectoCalificado}" title = "¿Califica para el proyecto?" columna = "proyectoCalificado" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.proyectoCalificado == null) ? "-" : cliente.proyectoCalificado }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "opcion" info = "" data = "${cliente.visitaAgendada}" title = "¿Agenda visita?" columna = "visitaAgendada" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.visitaAgendada) ? "SI" : "NO" }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "fecha" info = "" data = "${cliente.fechaVisitaAgendada}" title = "Fecha de visita" columna = "fechaVisita" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.fechaVisitaAgendada == null) ? "-/-/-" : cliente.fechaVisitaAgendada }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "opcion" info = "" data = "${cliente.visitaEfectiva}" title = "¿La visita fue efectiva?" columna = "visitaEfectiva" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.visitaEfectiva) ? "SI" : "NO" }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "estado" info = "" data = "${cliente.estado}" title = "Estado del cliente" columna = "estado" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.estado == null) ? "-" : cliente.estado }</div > `;
-        tabla.innerHTML += `< div class="table-body-cell" tipo = "asesor" info = "" data = "${cliente.asignadoA}" title = "Cliente asignado a" columna = "asignadoA" onclick = "setEditable(this)" onblur = "nonEditable(this)" > ${ (cliente.asignadoA == null) ? "-" : cliente.asignadoA }</div > `;*/
     return tabla;
 }
 
 document.addEventListener('contextmenu', function (e) {
     var context_menu = document.getElementById("context-menu-deployable");
     context_menu.style.display = "block";
-    context_menu.style.top = `${e.clientY} px`;
-    context_menu.style.left = `${e.clientX} px`;
+    context_menu.style.top = `${e.clientY}px`;
+    context_menu.style.left = `${e.screenX}px`;
     context_menu.onblur = function () {
         context_menu.style.display = "none";
-    }
-    var element = document.elementFromPoint(e.clientX, e.clientY);
-    context_menu.innerHTML += (element.getAttribute("info") == null) ? `No hay información` : element.getAttribute("info");
+    };
+    var element = document.elementFromPoint(e.screenX, e.clientY);
+    context_menu.innerHTML = (element.getAttribute("info") == null) ? `No hay información` : element.getAttribute("info").replace("-", element.getAttribute("valor"));
     e.preventDefault();
 }, false);
 
@@ -109,28 +105,66 @@ function setEditable(el) {
             element.contentEditable = "true";
             element.getElementsByTagName("select")[0].onchange = function () {
                 element.contentEditable = "false";
-                getClienteFromDiv(element);
+                var obj = getClienteFromDiv(element);
+                actualizarCliente(obj);
+                console.log(` ¡ Actualizado el cliente ${obj.codigoConteo} !${obj.nombre} `);
+            };
+            break;
+        case "opcion-texto":
+            element.contentEditable = "true";
+            element.getElementsByTagName("select")[0].onchange = function () {
+                if (element.getElementsByTagName("select")[0].value) {
+                    element.getElementsByTagName("input")[0].style.display = "block";
+                    element.getElementsByTagName("input")[0].onchange = function () {
+                        var obj = getClienteFromDiv(element);
+                        actualizarCliente(obj);
+                        console.log(` ¡ Actualizado el cliente ${obj.codigoConteo} !${obj.nombre} `);
+                    }
+                } else {
+                    element.getElementsByTagName("input")[0].style.display = "none";
+                    element.contentEditable = "false";
+                }
+            };
+            break;
+        case "opcion-fecha":
+            element.contentEditable = "true";
+            element.getElementsByTagName("select")[0].onchange = function () {
+                if (element.getElementsByTagName("select")[0].value) {
+                    element.getElementsByTagName("input")[0].value = new Date().toISOString().substring(0, 10);
+                    var obj = getClienteFromDiv(element);
+                    actualizarCliente(obj);
+                    console.log(` ¡ Actualizado el cliente ${obj.codigoConteo} !${obj.nombre} `);
+                } else {
+                    element.getElementsByTagName("input")[0].style.display = "none";
+                    element.contentEditable = "false";
+                }
             };
             break;
         case "texto":
             element.contentEditable = "true";
             element.onblur = function () {
                 element.contentEditable = "false";
-                getClienteFromDiv(element);
+                var obj = getClienteFromDiv(element);
+                actualizarCliente(obj);
+                console.log(` ¡ Actualizado el cliente ${obj.codigoConteo} !${obj.nombre} `);
             };
             break;
         case "fecha":
             element.contentEditable = "true";
             element.getElementsByTagName("input")[0].onchange = function () {
                 element.contentEditable = "false";
-                getClienteFromDiv(element, true);
+                var obj = getClienteFromDiv(element, true);
+                actualizarCliente(obj);
+                console.log(` ¡ Actualizado el cliente ${obj.codigoConteo} !${obj.nombre} `);
             };
             break;
         default:
             element.contentEditable = "true";
             element.onblur = function () {
                 element.contentEditable = "false";
-                getClienteFromDiv(element);
+                var obj = getClienteFromDiv(element);
+                actualizarCliente(obj);
+                console.log(` ¡ Actualizado el cliente ${obj.codigoConteo} !${obj.nombre} `);
             };
             break;
     }
@@ -140,19 +174,29 @@ function getClienteFromDiv(element, hasChanged) {
     var array = element.parentNode.getElementsByClassName("table-body-cell");
     let obj = {};
     for (var i = 0; i < array.length; i++) {
-        if (array[i].getElementsByTagName("input").length > 0) {
-            console.log(`locococo : ${array[i].getElementsByTagName("input")[0].value}`);
-            obj[array[i].getAttribute("columna")] = `${(hasChanged) ? new Date(array[i].getElementsByTagName("input")[0].value) : null}`;
-        } else if (array[i].getElementsByTagName("select").length > 0) {
-            obj[array[i].getAttribute("columna")] = (array[i].getElementsByTagName("select")[0].value == "SI");
+        if (array[i].getElementsByTagName("select").length > 0) {
+            if (array[i].getAttribute("tipo") == "opcion") {
+                obj[array[i].getAttribute("columna")] = array[i].getElementsByTagName("select")[0].value;
+            } else {
+                if (array[i].getAttribute("tipo") != "opcion-texto") {
+                    console.log(array[i].getElementsByTagName("input")[0].value);
+                    obj[array[i].getAttribute("columna")] = (array[i].getElementsByTagName("input")[0].value == "") ? null : new Date(array[i].getElementsByTagName("input")[0].value).toISOString();
+                } else {
+                    obj[array[i].getAttribute("columna")] = (array[i].getElementsByTagName("input")[0].value == null) ? null : array[i].getElementsByTagName("input")[0].value;
+                }
+            }
+
         } else {
-            obj[array[i].getAttribute("columna")] = array[i].innerHTML;
+            if (array[i].getAttribute("tipo") == "fecha") {
+                obj[array[i].getAttribute("columna")] = (array[i].getElementsByTagName("input")[0].value == "") ? null : new Date(array[i].getElementsByTagName("input")[0].value).toISOString();
+            } else {
+                obj[array[i].getAttribute("columna")] = array[i].innerHTML;
+            }
         }
     }
     obj.codigoConteo = element.parentNode.id.split("-")[1];
     console.log(obj);
-    actualizarCliente(obj);
-    console.log(` ¡ Actualizado el cliente ${obj.codigoConteo} !${obj.nombre} `);
+    return obj;
 }
 
 function nonEditable(element) {
@@ -200,6 +244,7 @@ function insertarCliente(formato, valor) {
                 response = JSON.parse(ajaxrequest.responseText);
                 console.log(` ¡ Se insertaron ${array.length} clientes! `);
                 console.log(`Respuesta servidor: ${response.respuesta} \n Estado de la solicitud: ${response.estado} \n Información solicitud: ${response.info} `);
+                cargarClientes();
             } else {
                 response = JSON.parse(ajaxrequest.responseText);
                 console.log(`Respuesta servidor: ${response.respuesta} \n Estado de la solicitud: ${response.estado} \n Información solicitud: ${response.info} `);
@@ -217,6 +262,7 @@ function insertarCliente(formato, valor) {
  * @param {Object} object 
  */
 function actualizarCliente(object) {
+
     const ajaxrequest = new XMLHttpRequest();
     var url = `clientes/${object.codigoConteo} `;
     ajaxrequest.open("PUT", url, true);

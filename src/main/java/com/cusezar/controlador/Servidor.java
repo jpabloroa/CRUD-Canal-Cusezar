@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -222,25 +223,41 @@ public class Servidor extends HttpServlet {
             //
             modelo = new Modelo(conexion);
             reader = new CSVReader();
+            InputStream inputStream = request.getInputStream();
+            StringBuilder sb = new StringBuilder();
+            for (int ch; (ch = inputStream.read()) != -1;) {
+                sb.append((char) ch);
+            }
 
             //
             String path = (request.getPathInfo().length() > 1) ? request.getPathInfo().substring(1) : "-";
+            String[] paths = path.split("/");
+            int arraySize = paths.length;
 
             //
             List<Cliente> listaRespuesta = new ArrayList<>();
-            Cliente cliente = (request.getAttribute(CONTROLADOR.ACTUALIZAR) != null) ? new Gson().fromJson((String) request.getAttribute(CONTROLADOR.ACTUALIZAR), Cliente.class) : new Gson().fromJson(new InputStreamReader(request.getInputStream()), com.cusezar.modelo.Cliente.class);
-            String valor = ("-".equals(path)) ? cliente.getCelular() : path;
+
             String columna = (request.getParameter("columna") == null) ? "" : request.getParameter("columna");
-            String formato = (request.getParameter("formato") == null) ? CONTENT.JSON : request.getParameter("formato").toLowerCase();
+            String formato = (arraySize < 4) ? CONTENT.JSON : paths[0].toLowerCase();
             int listaSize = 0;
+            Cliente cliente = new Cliente();
+            Object valor = null;
 
             //
             switch (formato) {
                 case CONTENT.JSON:
+
                     //
+                    cliente = (request.getAttribute(CONTROLADOR.ACTUALIZAR) != null) ? new Gson().fromJson((String) request.getAttribute(CONTROLADOR.ACTUALIZAR), Cliente.class) : new Gson().fromJson(sb.toString(), Cliente.class);
+                    valor = ("-".equals(path)) ? ((Cliente) cliente).getCodigoConteo() : path;
                     listaSize = modelo.updateClientes(columna, valor, cliente);
-                    listaRespuesta.add(cliente);
-                    jsonResponse(response, listaRespuesta, "perra");
+                    listaRespuesta.add((Cliente) cliente);
+                    break;
+                case CONTENT.CSV:
+
+                    //
+                    listaSize = modelo.updateClientes(paths[2], paths[1], paths[3]);
+                    listaRespuesta.add((Cliente) cliente);
                     break;
                 default:
                     throw new JsonSyntaxException(" Especifique un formato de envío válido ");
@@ -287,7 +304,6 @@ public class Servidor extends HttpServlet {
             jsonResponse(response, listaRespuesta, (listaSize == 0) ? new StringBuilder().append(" No se han efectuado cambios ").toString() : new StringBuilder().append("Se afectó(aron) ").append(listaSize).append(" cliente(s)").toString());
         } catch (JsonSyntaxException | IOException | SQLException ex) {
             sendError(ex, request, response);
-
         }
     }
 

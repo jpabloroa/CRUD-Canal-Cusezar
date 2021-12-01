@@ -4,6 +4,7 @@ com\cusezar\test\Testing.class
 com\cusezar\modelo\Cliente.class
 com\cusezar\controlador\Servidor$CONTROLADOR.class
 com\cusezar\controlador\Servidor$RESPUESTA.class
+com\cusezar\controlador\Servidor_Proyectos.class
 com\cusezar\controlador\Servidor$Mensaje.class
 com\cusezar\tools\CSVReader.class
 com\cusezar\modelo\Modelo.class

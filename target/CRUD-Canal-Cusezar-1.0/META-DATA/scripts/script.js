@@ -74,7 +74,7 @@ function filtrarPorProyecto(element, instance) {
                 collapsible.className = "collapsible";
                 var captionText = document.createElement("p");
                 captionText.contentEditable = "true";
-                captionText.innerHTML = `*[name]*`;
+                captionText.innerHTML = `Este es el mensaje para ${listaProyectos[j].toUpperCase()}`;
                 var clientList = document.createElement("p");
                 clientList.innerHTML += contactos[listaProyectos[j]];
 
@@ -83,7 +83,7 @@ function filtrarPorProyecto(element, instance) {
                 contenidoBox.appendChild(collapsible);
             }
             mainBox.appendChild(contenidoBox);
-            break;    
+            break;
     }
 }
 
@@ -119,7 +119,7 @@ function enviarWhatsAppPorProyecto(element) {
         collapsible.className = "collapsible";
         var captionText = document.createElement("p");
         captionText.contentEditable = "true";
-        captionText.innerHTML = `*[name]*`;
+        captionText.innerHTML = `Este es el mensaje para ${listaProyectos[j].toUpperCase()}`;
         var clientList = document.createElement("p");
         clientList.innerHTML += contactos[listaProyectos[j]];
 
@@ -158,7 +158,7 @@ function enviarCorreoPorProyecto(element) {
         collapsible.className = "collapsible";
         var captionText = document.createElement("p");
         captionText.contentEditable = "true";
-        captionText.innerHTML = `*[name]*`;
+        captionText.innerHTML = `Este es el mensaje para ${listaProyectos[j].toUpperCase()}`;
         var clientList = document.createElement("p");
         clientList.innerHTML += contactos[listaProyectos[j]];
 
@@ -172,20 +172,24 @@ function enviarCorreoPorProyecto(element) {
 function getObjetosCliente() {
     var respuesta = [];
     var columnas = document.getElementById("resp-table-body").getElementsByClassName("resp-table-row");
-    for (var i = 0; i < columnas.length; i++) {
-        let row = columnas[i];
+    for (var j = 0; j < columnas.length; j++) {
+        let row = columnas[j];
         var array = row.getElementsByClassName("table-body-cell");
         let obj = {};
-        for (var j = 0; j < array.length; j++) {
-            obj[array[j].title] = array[j].innerHTML;
+        for (var i = 0; i < array.length; i++) {
+            if (array[i].getElementsByTagName("input").length > 0) {
+                obj[array[i].getAttribute("columna")] = new Date(array[i].getElementsByTagName("input")[0].value);
+            } else if (array[i].getElementsByTagName("select").length > 0) {
+                obj[array[i].getAttribute("columna")] = (array[i].getElementsByTagName("select")[0].value == "SI");
+            } else {
+                obj[array[i].getAttribute("columna")] = array[i].innerHTML;
+            }
         }
-        ;
-        obj["codigoConteo"] = row.id.split("-")[1];
+        obj.codigoConteo = row.id.split("-")[1];
         respuesta.push(obj);
     }
     return respuesta;
 }
-
 
 function filtro() {
 

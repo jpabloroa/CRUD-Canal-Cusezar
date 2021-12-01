@@ -24,13 +24,13 @@ public class Cliente implements java.io.Serializable {
 
     //
     //------- Variables de datos a solicitar
-    private int codigoConteo;
-    private Date fechaDeCreacion;      // Automática - Importante
+    private int codigoConteo;           // Automática - Importante
+    private Date fechaDeCreacion;       // Automática - Importante
     private boolean viable;
-    private String nombre;             // Importante
-    private String correo;             // Importante
-    private String celular;            // Importante
-    private String medioPublicitario;  // Importante
+    private String nombre;              // Importante
+    private String correo;              // Importante
+    private String celular;             // Importante
+    private String medioPublicitario;   // Importante
     private String zonaBusqueda;
     private String proyectoDeInteres;
     private boolean gestionDesdeSalaDeVentas;
@@ -40,19 +40,19 @@ public class Cliente implements java.io.Serializable {
     //------- Variables de estado de cliente
     // Contactado
     private Date fechaDeContacto;
-    private boolean contactado = fechaDeContacto != null;
+    //private boolean contactado = fechaDeContacto != null;
     private Date fechaDeContactoEfectivo;
-    private boolean contactoEfectivo = fechaDeContactoEfectivo != null;
+    //private boolean contactoEfectivo = fechaDeContactoEfectivo != null;
 
     // Calificado
     private String proyectoCalificado;
-    private boolean calificado = proyectoCalificado != null;
+    //private boolean calificado = proyectoCalificado != null;
 
     // Agendado para visita   
-    private Date fechaVisitaAdendada;
-    private boolean visitaAgendada = fechaVisitaAdendada != null;
+    private Date fechaVisitaAgendada;
+    //private boolean visitaAgendada = fechaVisitaAgendada != null;
     private Date fechaVisitaEfectiva;
-    private boolean visitaEfectiva = fechaVisitaEfectiva != null;
+    //private boolean visitaEfectiva = fechaVisitaEfectiva != null;
 
     // Estado del prospecto
     private String estado;
@@ -158,15 +158,14 @@ public class Cliente implements java.io.Serializable {
         this.fechaDeContacto = fechaDeContacto;
     }
 
-    public boolean isContactado() {
+    /*public boolean isContactado() {
         return contactado;
-    }
+    }*/
 
-    public void setContactado(boolean contactado) {
+    /*public void setContactado(boolean contactado) {
         this.contactado = contactado;
         this.fechaDeContacto = Calendar.getInstance().getTime();
-    }
-
+    }*/
     public Date getFechaDeContactoEfectivo() {
         return fechaDeContactoEfectivo;
     }
@@ -175,14 +174,14 @@ public class Cliente implements java.io.Serializable {
         this.fechaDeContactoEfectivo = fechaDeContactoEfectivo;
     }
 
-    public boolean isContactoEfectivo() {
+    /*public boolean isContactoEfectivo() {
         return contactoEfectivo;
-    }
+    }*/
 
-    public void setContactoEfectivo(boolean contactoEfectivo) {
+    /*public void setContactoEfectivo(boolean contactoEfectivo) {
         this.contactoEfectivo = contactoEfectivo;
-        this.fechaDeContactoEfectivo = Calendar.getInstance().getTime();
-    }
+        this.fechaDeContactoEfectivo = (this.fechaDeContactoEfectivo == null) ? Calendar.getInstance().getTime() : this.fechaDeContactoEfectivo;
+    }*/
 
     public String getProyectoCalificado() {
         return proyectoCalificado;
@@ -192,31 +191,29 @@ public class Cliente implements java.io.Serializable {
         this.proyectoCalificado = proyectoCalificado;
     }
 
-    public boolean isCalificado() {
+    /*public boolean isCalificado() {
         return calificado;
-    }
+    }*/
 
-    public void setCalificado(boolean calificado) {
+    /*public void setCalificado(boolean calificado) {
         this.calificado = calificado;
-    }
-
+    }*/
     public Date getFechaVisitaAdendada() {
-        return fechaVisitaAdendada;
+        return fechaVisitaAgendada;
     }
 
     public void setFechaVisitaAdendada(Date fechaVisitaAdendada) {
-        this.fechaVisitaAdendada = fechaVisitaAdendada;
+        this.fechaVisitaAgendada = fechaVisitaAdendada;
     }
 
-    public boolean isVisitaAgendada() {
+    /*public boolean isVisitaAgendada() {
         return visitaAgendada;
-    }
+    }*/
 
-    public void setVisitaAgendada(boolean visitaAgendada) {
+    /*public void setVisitaAgendada(boolean visitaAgendada) {
         this.visitaAgendada = visitaAgendada;
-        this.fechaVisitaAdendada = Calendar.getInstance().getTime();
-    }
-
+        this.fechaVisitaAgendada = Calendar.getInstance().getTime();
+    }*/
     public Date getFechaVisitaEfectiva() {
         return fechaVisitaEfectiva;
     }
@@ -225,15 +222,14 @@ public class Cliente implements java.io.Serializable {
         this.fechaVisitaEfectiva = fechaVisitaEfectiva;
     }
 
-    public boolean isVisitaEfectiva() {
+    /*public boolean isVisitaEfectiva() {
         return visitaEfectiva;
-    }
+    }*/
 
-    public void setVisitaEfectiva(boolean visitaEfectiva) {
+    /*public void setVisitaEfectiva(boolean visitaEfectiva) {
         this.visitaEfectiva = visitaEfectiva;
         this.fechaVisitaEfectiva = Calendar.getInstance().getTime();
-    }
-
+    }*/
     public String getEstado() {
         return estado;
     }

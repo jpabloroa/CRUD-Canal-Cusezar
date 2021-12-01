@@ -47,7 +47,7 @@ public class Modelo {
         public String fechaDeContactoEfectivo = "fechaDeContactoEfectivo";
         public String proyectoCalificado = "proyectoCalificado";
         public String fechaVisitaAgendada = "fechaVisitaAgendada";
-        public String visitaEfectiva = "visitaEfectiva";
+        public String visitaEfectiva = "isitaEfectiva";
         public String fechaVisitaEfectiva = "fechaVisitaEfectiva";
         public String estado = "estado";
         public String fechaModificacionEstado = "fechaModificacionEstado";
@@ -92,11 +92,10 @@ public class Modelo {
             cliente.setGestionDesdeSalaDeVentas(resultSet.getBoolean("gestionDesdeSalaDeVentas"));
             cliente.setHabeasData(resultSet.getBoolean("habeasData"));
             cliente.setFechaDeContacto(resultSet.getTimestamp("fechaDeContacto"));
-            cliente.setContactoEfectivo(resultSet.getBoolean("contactoEfectivo"));
+            //cliente.setContactoEfectivo(resultSet.getBoolean("contactoEfectivo"));
             cliente.setFechaDeContactoEfectivo(resultSet.getTimestamp("fechaDeContactoEfectivo"));
             cliente.setProyectoCalificado(resultSet.getString("proyectoCalificado"));
             cliente.setFechaVisitaAdendada(resultSet.getTimestamp("fechaVisitaAgendada"));
-            cliente.setVisitaEfectiva(resultSet.getBoolean("visitaEfectiva"));
             cliente.setFechaVisitaEfectiva(resultSet.getTimestamp("fechaVisitaEfectiva"));
             cliente.setEstado(resultSet.getString("estado"));
             cliente.setFechaModificacionEstado(resultSet.getTimestamp("fechaModificacionEstado"));
@@ -137,16 +136,15 @@ public class Modelo {
         sql.append(columna.gestionDesdeSalaDeVentas).append(",");
         sql.append(columna.habeasData).append(",");
         sql.append(columna.fechaDeContacto).append(",");
-        sql.append(columna.contactoEfectivo).append(",");
+        //sql.append(columna.contactoEfectivo).append(",");
         sql.append(columna.fechaDeContactoEfectivo).append(",");
         sql.append(columna.proyectoCalificado).append(",");
         sql.append(columna.fechaVisitaAgendada).append(",");
-        sql.append(columna.visitaEfectiva).append(",");
         sql.append(columna.fechaVisitaEfectiva).append(",");
         sql.append(columna.estado).append(",");
         sql.append(columna.fechaModificacionEstado).append(",");
         sql.append(columna.asignadoA).append(")");
-        sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         statement = conection.prepareStatement(sql.toString());
 
         //
@@ -157,17 +155,16 @@ public class Modelo {
             statement.setString(i++, cliente.getNombre());
             statement.setString(i++, (cliente.getCorreo() == null) ? null : cliente.getCorreo().trim());
             statement.setString(i++, (cliente.getCelular() == null) ? null : cliente.getCelular().trim());
-            statement.setString(i++, cliente.getMedioPublicitario().toUpperCase());
-            statement.setString(i++, cliente.getZonaBusqueda().toUpperCase());
-            statement.setString(i++, cliente.getProyectoDeInteres().toUpperCase());
+            statement.setString(i++, (cliente.getMedioPublicitario() == null) ? null : cliente.getMedioPublicitario().toUpperCase());
+            statement.setString(i++, (cliente.getZonaBusqueda() == null) ? null : cliente.getZonaBusqueda().toUpperCase());
+            statement.setString(i++, (cliente.getProyectoDeInteres() == null) ? null : cliente.getProyectoDeInteres().toUpperCase());
             statement.setBoolean(i++, cliente.isGestionDesdeSalaDeVentas());
             statement.setBoolean(i++, cliente.isHabeasData());
             statement.setTimestamp(i++, (cliente.getFechaDeContacto() == null) ? null : new Timestamp(cliente.getFechaDeContacto().getTime()));
-            statement.setBoolean(i++, cliente.isContactoEfectivo());
+            //statement.setBoolean(i++, cliente.isContactoEfectivo());
             statement.setTimestamp(i++, (cliente.getFechaDeContactoEfectivo() == null) ? null : new Timestamp(cliente.getFechaDeContactoEfectivo().getTime()));
-            statement.setString(i++, cliente.getProyectoCalificado());
+            statement.setString(i++, (cliente.getProyectoCalificado() == null) ? null : cliente.getProyectoCalificado().toUpperCase());
             statement.setTimestamp(i++, (cliente.getFechaVisitaAdendada() == null) ? null : new Timestamp(cliente.getFechaVisitaAdendada().getTime()));
-            statement.setBoolean(i++, cliente.isVisitaEfectiva());
             statement.setTimestamp(i++, (cliente.getFechaVisitaEfectiva() == null) ? null : new Timestamp(cliente.getFechaVisitaEfectiva().getTime()));
             statement.setString(i++, cliente.getEstado());
             statement.setTimestamp(i++, (cliente.getFechaModificacionEstado() == null) ? null : new Timestamp(cliente.getFechaModificacionEstado().getTime()));
@@ -185,59 +182,74 @@ public class Modelo {
      * Actualizar un datos según el parámetro seleccionado
      *
      * @param column
+     * @param parametro
      * @param valor
-     * @param cliente
      * @return
      * @throws SQLException
      */
-    public int updateClientes(String column, String valor, Cliente cliente) throws SQLException {
+    public int updateClientes(String column, Object parametro, Object valor) throws SQLException {
 
         //
         StringBuilder sql = new StringBuilder();
-        sql.append("UPDATE clientes SET ");
-        sql.append(columna.viable).append(" = ? ,");
-        sql.append(columna.nombre).append(" = ? ,");
-        sql.append(columna.correo).append(" = ? ,");
-        sql.append(columna.celular).append(" = ? ,");
-        sql.append(columna.medioPublicitario).append(" = ? ,");
-        sql.append(columna.zonaBusqueda).append(" = ? ,");
-        sql.append(columna.proyectoDeInteres).append(" = ? ,");
-        sql.append(columna.gestionDesdeSalaDeVentas).append(" = ? ,");
-        sql.append(columna.habeasData).append(" = ? ,");
-        sql.append(columna.fechaDeContacto).append(" = ? ,");
-        sql.append(columna.contactoEfectivo).append(" = ? ,");
-        sql.append(columna.fechaDeContactoEfectivo).append(" = ? ,");
-        sql.append(columna.proyectoCalificado).append(" = ? ,");
-        sql.append(columna.fechaVisitaAgendada).append(" = ? ,");
-        sql.append(columna.visitaEfectiva).append(" = ? ,");
-        sql.append(columna.fechaVisitaEfectiva).append(" = ? ,");
-        sql.append(columna.estado).append(" = ? ,");
-        sql.append(columna.fechaModificacionEstado).append(" = ? ,");
-        sql.append(columna.asignadoA).append(" = ? ");
-        sql.append(" WHERE ");
-        sql.append(("".equals(column)) ? this.columna.codigoConteo : column).append(" = ?");
-        statement = conection.prepareStatement(sql.toString());
-        int i = 1;
-        statement.setBoolean(i++, cliente.isViable());
-        statement.setString(i++, cliente.getNombre());
-        statement.setString(i++, (cliente.getCorreo() == null) ? null : cliente.getCorreo().trim());
-        statement.setString(i++, (cliente.getCelular() == null) ? null : cliente.getCelular().trim());
-        statement.setString(i++, cliente.getMedioPublicitario().toUpperCase());
-        statement.setString(i++, cliente.getZonaBusqueda().toUpperCase());
-        statement.setString(i++, cliente.getProyectoDeInteres().toUpperCase());
-        statement.setBoolean(i++, cliente.isGestionDesdeSalaDeVentas());
-        statement.setBoolean(i++, cliente.isHabeasData());
-        statement.setTimestamp(i++, (cliente.getFechaDeContacto() == null) ? null : new Timestamp(cliente.getFechaDeContacto().getTime()));
-        statement.setBoolean(i++, cliente.isContactoEfectivo());
-        statement.setTimestamp(i++, (cliente.getFechaDeContactoEfectivo() == null) ? null : new Timestamp(cliente.getFechaDeContactoEfectivo().getTime()));
-        statement.setString(i++, cliente.getProyectoCalificado());
-        statement.setTimestamp(i++, (cliente.getFechaVisitaAdendada() == null) ? null : new Timestamp(cliente.getFechaVisitaAdendada().getTime()));
-        statement.setBoolean(i++, cliente.isVisitaEfectiva());
-        statement.setTimestamp(i++, (cliente.getFechaVisitaEfectiva() == null) ? null : new Timestamp(cliente.getFechaVisitaEfectiva().getTime()));
-        statement.setString(i++, cliente.getEstado());
-        statement.setTimestamp(i++, (cliente.getFechaModificacionEstado() == null) ? null : new Timestamp(cliente.getFechaModificacionEstado().getTime()));
-        statement.setString(i++, cliente.getAsignadoA());
-        statement.setObject(i++, valor);
+
+        if (valor instanceof String) {
+
+            //
+            sql.append("UPDATE clientes SET ").append(column).append(" = ? WHERE ").append(this.columna.codigoConteo).append(" = ").append(parametro);
+            statement = conection.prepareStatement(sql.toString());
+
+            //
+            statement.setObject(1, valor);
+
+        } else {
+
+            //
+            Cliente cliente = (Cliente) valor;
+            sql.append("UPDATE clientes SET ");
+            sql.append(columna.viable).append(" = ? ,");
+            sql.append(columna.nombre).append(" = ? ,");
+            sql.append(columna.correo).append(" = ? ,");
+            sql.append(columna.celular).append(" = ? ,");
+            sql.append(columna.medioPublicitario).append(" = ? ,");
+            sql.append(columna.zonaBusqueda).append(" = ? ,");
+            sql.append(columna.proyectoDeInteres).append(" = ? ,");
+            sql.append(columna.gestionDesdeSalaDeVentas).append(" = ? ,");
+            sql.append(columna.habeasData).append(" = ? ,");
+            sql.append(columna.fechaDeContacto).append(" = ? ,");
+            //sql.append(columna.contactoEfectivo).append(" = ? ,");
+            sql.append(columna.fechaDeContactoEfectivo).append(" = ? ,");
+            sql.append(columna.proyectoCalificado).append(" = ? ,");
+            sql.append(columna.fechaVisitaAgendada).append(" = ? ,");
+            sql.append(columna.fechaVisitaEfectiva).append(" = ? ,");
+            sql.append(columna.estado).append(" = ? ,");
+            sql.append(columna.fechaModificacionEstado).append(" = ? ,");
+            sql.append(columna.asignadoA).append(" = ? ");
+            sql.append(" WHERE ");
+            sql.append(("".equals(column)) ? this.columna.codigoConteo : column).append(" = ?");
+            statement = conection.prepareStatement(sql.toString());
+            int i = 1;
+
+            statement.setBoolean(i++, cliente.isViable());
+            statement.setString(i++, cliente.getNombre());
+            statement.setString(i++, (cliente.getCorreo() == null) ? null : cliente.getCorreo().trim());
+            statement.setString(i++, (cliente.getCelular() == null) ? null : cliente.getCelular().trim());
+            statement.setString(i++, (cliente.getMedioPublicitario() == null) ? null : cliente.getMedioPublicitario().toUpperCase());
+            statement.setString(i++, (cliente.getZonaBusqueda() == null) ? null : cliente.getZonaBusqueda().toUpperCase());
+            statement.setString(i++, (cliente.getProyectoDeInteres() == null) ? null : cliente.getProyectoDeInteres().toUpperCase());
+            statement.setBoolean(i++, cliente.isGestionDesdeSalaDeVentas());
+            statement.setBoolean(i++, cliente.isHabeasData());
+            statement.setTimestamp(i++, (cliente.getFechaDeContacto() == null) ? null : new Timestamp(cliente.getFechaDeContacto().getTime()));
+            //statement.setBoolean(i++, cliente.isContactoEfectivo());
+            statement.setTimestamp(i++, (cliente.getFechaDeContactoEfectivo() == null) ? null : new Timestamp(cliente.getFechaDeContactoEfectivo().getTime()));
+            statement.setString(i++, (cliente.getProyectoCalificado() == null) ? null : cliente.getProyectoCalificado().toUpperCase());
+            statement.setTimestamp(i++, (cliente.getFechaVisitaAdendada() == null) ? null : new Timestamp(cliente.getFechaVisitaAdendada().getTime()));
+            statement.setTimestamp(i++, (cliente.getFechaVisitaEfectiva() == null) ? null : new Timestamp(cliente.getFechaVisitaEfectiva().getTime()));
+            statement.setString(i++, cliente.getEstado());
+            statement.setTimestamp(i++, (cliente.getFechaModificacionEstado() == null) ? null : new Timestamp(cliente.getFechaModificacionEstado().getTime()));
+            statement.setString(i++, cliente.getAsignadoA());
+            statement.setObject(i++, parametro);
+        }
+
         //
         return statement.executeUpdate();
     }

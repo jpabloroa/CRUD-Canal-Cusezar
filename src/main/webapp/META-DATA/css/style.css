@@ -21,12 +21,25 @@ html {
 }
 
 #context-menu-deployable {
-    display: none;
     position: absolute;
     width: 10vw;
     height: 15vh;
     background-color: white;
     color: black;
+    border: 0.5px dashed black;
+    display: none;
+    padding: 2vw;
+}
+
+#context-menu-deployable:-moz-ui-valid {
+    position: absolute;
+    width: 10vw;
+    height: 15vh;
+    background-color: white;
+    color: black;
+    border: 0.5px dashed black;
+    display: none;
+    padding: 2vw;
 }
 
 /**/
